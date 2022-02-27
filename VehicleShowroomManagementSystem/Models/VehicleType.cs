@@ -27,6 +27,5 @@ namespace VehicleShowroomManagementSystem.Models
 
         public List<Product> Products { get; set; }
 
-        public List<Manufacturer> Manufacturers { get; set; }
     }
 }
