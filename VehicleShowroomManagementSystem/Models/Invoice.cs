@@ -20,6 +20,9 @@ namespace VehicleShowroomManagementSystem.Models
         [Required(ErrorMessage ="{0} không được bỏ trống!")]
         public string ContractNumber { get; set; }
 
+        [DisplayName("Mô tả")]
+        public string Description { get; set; }
+
         [DisplayName("Địa chỉ giao hàng")]
         public string ShippingAddress { get; set; }
 
