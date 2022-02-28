@@ -11,7 +11,7 @@ namespace VehicleShowroomManagementSystem.Data
     {
         public VehicleShowroomManagementSystemContext(DbContextOptions<VehicleShowroomManagementSystemContext> options) : base(options) { }
 
-        public DbSet<Barnch> Barnchs { set; get; }
+        public DbSet<Branch> Branches { set; get; }
 
         public DbSet<Cart> Carts { set; get; }
 

@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace VehicleShowroomManagementSystem.Models
 {
-    public class Barnch
+    public class Branch
     {
         public int Id { get; set; }
 

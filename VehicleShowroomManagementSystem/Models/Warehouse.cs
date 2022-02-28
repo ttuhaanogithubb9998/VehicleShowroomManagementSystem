@@ -15,7 +15,7 @@ namespace VehicleShowroomManagementSystem.Models
         public int BranchId { get; set; }
         
         [DisplayName("Chi nhánh")]
-        public Barnch Barnch { get; set; }
+        public Branch Branch { get; set; }
 
         public int ProductId { get; set; }
 

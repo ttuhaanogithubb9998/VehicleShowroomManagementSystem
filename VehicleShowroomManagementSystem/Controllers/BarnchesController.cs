@@ -22,7 +22,7 @@ namespace VehicleShowroomManagementSystem.Controllers
         // GET: Barnches
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Barnchs.ToListAsync());
+            return View(await _context.Branches.ToListAsync());
         }
 
         // GET: Barnches/Details/5
@@ -33,7 +33,7 @@ namespace VehicleShowroomManagementSystem.Controllers
                 return NotFound();
             }
 
-            var barnch = await _context.Barnchs
+            var barnch = await _context.Branches
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (barnch == null)
             {
@@ -54,7 +54,7 @@ namespace VehicleShowroomManagementSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Location,Name,PhoneNumber,Address,Status")] Barnch barnch)
+        public async Task<IActionResult> Create([Bind("Id,Location,Name,PhoneNumber,Address,Status")] Branch barnch)
         {
             if (ModelState.IsValid)
             {
@@ -73,7 +73,7 @@ namespace VehicleShowroomManagementSystem.Controllers
                 return NotFound();
             }
 
-            var barnch = await _context.Barnchs.FindAsync(id);
+            var barnch = await _context.Branches.FindAsync(id);
             if (barnch == null)
             {
                 return NotFound();
@@ -86,7 +86,7 @@ namespace VehicleShowroomManagementSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Location,Name,PhoneNumber,Address,Status")] Barnch barnch)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Location,Name,PhoneNumber,Address,Status")] Branch barnch)
         {
             if (id != barnch.Id)
             {
@@ -124,7 +124,7 @@ namespace VehicleShowroomManagementSystem.Controllers
                 return NotFound();
             }
 
-            var barnch = await _context.Barnchs
+            var barnch = await _context.Branches
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (barnch == null)
             {
@@ -139,15 +139,15 @@ namespace VehicleShowroomManagementSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var barnch = await _context.Barnchs.FindAsync(id);
-            _context.Barnchs.Remove(barnch);
+            var barnch = await _context.Branches.FindAsync(id);
+            _context.Branches.Remove(barnch);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool BarnchExists(int id)
         {
-            return _context.Barnchs.Any(e => e.Id == id);
+            return _context.Branches.Any(e => e.Id == id);
         }
     }
 }
