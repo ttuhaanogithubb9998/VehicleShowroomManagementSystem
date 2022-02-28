@@ -20,7 +20,7 @@ namespace VehicleShowroomManagementSystem.Models
         [Required(ErrorMessage ="{0} không được bỏ trống!")]
         public string Name { get; set; }
 
-        [DisplayName("SDT")]
+        [DisplayName("Số điện thoại")]
         [Required(ErrorMessage ="{0} không được bỏ trống!")]
         [RegularExpression("0\\d{9}", ErrorMessage = "STD không hợp lệ!")]
         public string PhoneNumber { get; set; }
