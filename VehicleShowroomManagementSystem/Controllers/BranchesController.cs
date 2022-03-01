@@ -10,11 +10,11 @@ using VehicleShowroomManagementSystem.Models;
 
 namespace VehicleShowroomManagementSystem.Controllers
 {
-    public class BarnchesController : Controller
+    public class BranchesController : Controller
     {
         private readonly VehicleShowroomManagementSystemContext _context;
 
-        public BarnchesController(VehicleShowroomManagementSystemContext context)
+        public BranchesController(VehicleShowroomManagementSystemContext context)
         {
             _context = context;
         }

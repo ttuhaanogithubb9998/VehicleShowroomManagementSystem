@@ -11,8 +11,12 @@ namespace VehicleShowroomManagementSystem.Models
     {
         public int Id { get; set; }
 
+        [DisplayName("Khách hàng")]
         public int CustomerId { get; set; }
-        
+
+        [DisplayName("Khách hàng")]
+        public Customer Customer { get; set; }
+
         [DisplayName("Ngày giao dịch")]
         public DateTime Date { get; set; }
 

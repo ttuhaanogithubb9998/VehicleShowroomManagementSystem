@@ -13,11 +13,13 @@ namespace VehicleShowroomManagementSystem.Models
     {
         public int Id { get; set; }
 
+        [DisplayName("Loại phương tiện")]
         public int VehicleTypeId { get; set; }
 
         [DisplayName("Loại phương tiện")]
         public VehicleType VehicleType { get; set; }
 
+        [DisplayName("Hãng sản xuất")]
         public int ManufacturerId { get; set; }
 
         [DisplayName("Hãng sản xuất")]

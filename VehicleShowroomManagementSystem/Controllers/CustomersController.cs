@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using VehicleShowroomManagementSystem.Data;
 using VehicleShowroomManagementSystem.Models;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace VehicleShowroomManagementSystem.Controllers
 {
@@ -14,8 +16,12 @@ namespace VehicleShowroomManagementSystem.Controllers
     {
         private readonly VehicleShowroomManagementSystemContext _context;
 
-        public CustomersController(VehicleShowroomManagementSystemContext context)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
+
+        public CustomersController(VehicleShowroomManagementSystemContext context, IWebHostEnvironment webHostEnvironment)
         {
+            _webHostEnvironment = webHostEnvironment;
             _context = context;
         }
 
@@ -54,12 +60,49 @@ namespace VehicleShowroomManagementSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Account,Password,FullName,Address,PhoneNumber,Email,Avatar,Status")] Customer customer)
+        public async Task<IActionResult> Create([Bind("Id,Account,Password,FullName,Address,PhoneNumber,Email,Avatar,Status,AvatarFile")] Customer customer)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(customer);
-                await _context.SaveChangesAsync();
+                bool check = _context.Customers.Any(c => c.Account == customer.Account || c.PhoneNumber == customer.PhoneNumber || c.Email == customer.Email);
+                if (!check)
+                {
+
+                    _context.Add(customer);
+                    _context.SaveChanges();
+                    int id = _context.Customers.FirstOrDefault(c => c.Account == customer.Account).Id;
+                    customer.Id = id;
+
+                    if (customer.AvatarFile != null)
+                    {
+
+                        string fileName = id.ToString() + Path.GetExtension(customer.AvatarFile.FileName);
+                        string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "image", "avartar", "customer");
+                        string filePath = Path.Combine(uploadPath, fileName);
+                        using (FileStream fs = System.IO.File.Create(filePath))
+                        {
+                            customer.AvatarFile.CopyTo(fs);
+                            customer.Avatar = fileName;
+                        }
+                        _context.Update(customer);
+                        await _context.SaveChangesAsync();
+
+                    }
+                    else
+                    {
+                        ViewBag.msgFile = "Hình ảnh không được bỏ trống!";
+                        _context.Remove(customer);
+                        await _context.SaveChangesAsync();
+                        return View(customer);
+                    }
+                }
+                else
+                {
+                    _context.Remove(customer);
+                    await _context.SaveChangesAsync();
+                    ViewBag.msgCheck = "Tên tài khoản, SDT, Email đã tồn tại!";
+                    return View(customer);
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(customer);

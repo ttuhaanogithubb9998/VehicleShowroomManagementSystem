@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using VehicleShowroomManagementSystem.Data;
 using VehicleShowroomManagementSystem.Models;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
+
 
 namespace VehicleShowroomManagementSystem.Controllers
 {
@@ -14,8 +17,11 @@ namespace VehicleShowroomManagementSystem.Controllers
     {
         private readonly VehicleShowroomManagementSystemContext _context;
 
-        public ManufacturersController(VehicleShowroomManagementSystemContext context)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
+        public ManufacturersController(VehicleShowroomManagementSystemContext context, IWebHostEnvironment webHostEnvironment)
         {
+            _webHostEnvironment = webHostEnvironment;
             _context = context;
         }
 
@@ -54,14 +60,53 @@ namespace VehicleShowroomManagementSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Image,Status")] Manufacturer manufacturer)
+        public async Task<IActionResult> Create([Bind("Id,Name,Image,ImageFile,Status")] Manufacturer manufacturer)
         {
+
             if (ModelState.IsValid)
             {
-                _context.Add(manufacturer);
-                await _context.SaveChangesAsync();
+                //check manufaturer
+                bool check = _context.Manufacturers.Any(m => m.Name == manufacturer.Name);
+                if (!check)
+                {
+                    _context.Add(manufacturer);
+                    _context.SaveChanges();
+
+                    // upload image file
+                    int id = _context.Manufacturers.FirstOrDefault(m => m.Name == manufacturer.Name).Id;
+                    if (manufacturer.ImageFile != null)
+                    {
+                        var fileName = id.ToString() + Path.GetExtension(manufacturer.ImageFile.FileName);
+                        var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "image", "logo", "manufacturer");
+                        var filePath = Path.Combine(uploadPath, fileName);
+                        using (FileStream fs = System.IO.File.Create(filePath))
+                        {
+                            manufacturer.ImageFile.CopyTo(fs);
+                            fs.Flush();
+                            manufacturer.Image = fileName;
+                            manufacturer.Id = id;
+
+                        }
+                        _context.Update(manufacturer);
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        _context.Remove(manufacturer);
+                        await _context.SaveChangesAsync();
+                        ViewBag.msgFile = "Hình ảnh không được bỏ trống!";
+                        return View(manufacturer);
+                    }
+
+                }
+                else
+                {
+                    ViewBag.msgCheck = "Tên hãng đã tồn tại!";
+                    return View(manufacturer);
+                }
                 return RedirectToAction(nameof(Index));
             }
+
             return View(manufacturer);
         }
 

@@ -12,8 +12,9 @@ namespace VehicleShowroomManagementSystem.Models
     {
         public int Id { get; set; }
 
+        [DisplayName("Chi nhánh")]
         public int BranchId { get; set; }
-        
+
         [DisplayName("Chi nhánh")]
         public Branch Branch { get; set; }
 

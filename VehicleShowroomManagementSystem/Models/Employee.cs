@@ -16,6 +16,7 @@ namespace VehicleShowroomManagementSystem.Models
         [Required(ErrorMessage = "{0} không được bỏ trống!")]
         public string Position { get; set; }
 
+        [DisplayName("Chi nhánh")]
         public int BranchId { get; set; }
 
         [DisplayName("Chi nhánh")]

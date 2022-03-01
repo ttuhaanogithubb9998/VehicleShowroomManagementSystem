@@ -18,13 +18,15 @@ namespace VehicleShowroomManagementSystem.Models
         public string Name { get; set; }
 
         [DisplayName("Logo")]
-        public string Image { set; get; }
+        [DefaultValue("default.png")]
+        public string Image { set; get; } = "default.png";
 
         [NotMapped]
         [DisplayName("Logo")]
         public IFormFile ImageFile { get; set; }
 
         [DisplayName("Trạng thái")]
-        public bool Status { get; set; }
+        [DefaultValue(true)]
+        public bool Status { get; set; } = true;
     }
 }

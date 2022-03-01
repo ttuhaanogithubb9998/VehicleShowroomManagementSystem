@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using VehicleShowroomManagementSystem.Data;
 using VehicleShowroomManagementSystem.Models;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace VehicleShowroomManagementSystem.Controllers
 {
@@ -14,8 +16,12 @@ namespace VehicleShowroomManagementSystem.Controllers
     {
         private readonly VehicleShowroomManagementSystemContext _context;
 
-        public VehicleTypesController(VehicleShowroomManagementSystemContext context)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
+
+        public VehicleTypesController(VehicleShowroomManagementSystemContext context, IWebHostEnvironment webHostEnvironment)
         {
+            _webHostEnvironment = webHostEnvironment;
             _context = context;
         }
 
@@ -54,13 +60,47 @@ namespace VehicleShowroomManagementSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Image,Status")] VehicleType vehicleType)
+        public async Task<IActionResult> Create([Bind("Id,Name,Image,Status,ImageFile")] VehicleType vehicleType)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(vehicleType);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                bool check = _context.VehicleTypes.Any(vt => vt.Name == vehicleType.Name);
+                if (!check)
+                {
+                    _context.Add(vehicleType);
+                    await _context.SaveChangesAsync();
+
+                    int id = _context.VehicleTypes.FirstOrDefault(v => v.Name == vehicleType.Name).Id;
+
+                    if (vehicleType.ImageFile != null)
+                    {
+                        var fileName = id.ToString() + Path.GetExtension(vehicleType.ImageFile.FileName);
+                        var uploadPath = Path.Combine(_webHostEnvironment.ContentRootPath, "image", "logo", "vehicleType");
+                        var filePath = Path.Combine(uploadPath, fileName);
+
+                        using (FileStream fs = System.IO.File.Create(filePath))
+                        {
+                            vehicleType.ImageFile.CopyTo(fs);
+                            fs.Flush();
+                            vehicleType.Image = fileName;
+                            vehicleType.Id = id;
+                        }
+                    }
+                    else
+                    {
+                        _context.Remove(vehicleType);
+                        await _context.SaveChangesAsync();
+                        ViewBag.msgFile = "Hãy chọn hình ảnh";
+
+                        return View(vehicleType);
+                    }
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ViewBag.msgCheck = "Tên đã tồn tại!";
+                    return View(vehicleType);
+                }
             }
             return View(vehicleType);
         }
