@@ -31,36 +31,43 @@ namespace VehicleShowroomManagementSystem.Controllers
             return View(await _context.Customers.ToListAsync());
         }
 
-        // GET: Customers/Details/5
-        public async Task<IActionResult> Details(int? id)
+
+        // GET: Customers/Login
+        [HttpPost]
+        public JsonResult Login(string account, string password)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
-            }
+                Customer Customer = _context.Customers.FirstOrDefault(c => c.Account == account & c.Password == password);
+                if (Customer != null)
+                {
 
-            var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (customer == null)
+                    return Json(new { code = 200, customer = Customer, msg = "Logged in successfully" });
+                }
+
+                return Json(new { code = 200, msg = "Login failed" });
+
+            }
+            catch (Exception ex)
             {
-                return NotFound();
-            }
+                return Json(new { code = 500, msg = "error" + ex.Message });
 
-            return View(customer);
+            }
         }
 
-        // GET: Customers/Create
-        public IActionResult Create()
+
+        // GET: Customers/Register
+        public IActionResult Register()
         {
             return View();
         }
 
-        // POST: Customers/Create
+        // POST: Customers/Register
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Account,Password,FullName,Address,PhoneNumber,Email,Avatar,Status,AvatarFile")] Customer customer)
+        public async Task<IActionResult> Register([Bind("Id,Account,Password,FullName,Address,PhoneNumber,Email,Avatar,Status,AvatarFile")] Customer customer)
         {
             if (ModelState.IsValid)
             {
@@ -77,7 +84,7 @@ namespace VehicleShowroomManagementSystem.Controllers
                     {
 
                         string fileName = id.ToString() + Path.GetExtension(customer.AvatarFile.FileName);
-                        string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "image", "avartar", "customer");
+                        string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "image", "avatar", "customer");
                         string filePath = Path.Combine(uploadPath, fileName);
                         using (FileStream fs = System.IO.File.Create(filePath))
                         {
@@ -159,34 +166,6 @@ namespace VehicleShowroomManagementSystem.Controllers
             return View(customer);
         }
 
-        // GET: Customers/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (customer == null)
-            {
-                return NotFound();
-            }
-
-            return View(customer);
-        }
-
-        // POST: Customers/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var customer = await _context.Customers.FindAsync(id);
-            _context.Customers.Remove(customer);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
 
         private bool CustomerExists(int id)
         {

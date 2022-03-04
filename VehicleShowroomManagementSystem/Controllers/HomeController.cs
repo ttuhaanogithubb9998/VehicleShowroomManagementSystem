@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using VehicleShowroomManagementSystem.Models;
+using VehicleShowroomManagementSystem.Data;
 
 namespace VehicleShowroomManagementSystem.Controllers
 {
@@ -13,13 +14,17 @@ namespace VehicleShowroomManagementSystem.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly VehicleShowroomManagementSystemContext _context;
+
+        public HomeController(ILogger<HomeController> logger, VehicleShowroomManagementSystemContext context)
         {
+            _context = context;
             _logger = logger;
         }
 
         public IActionResult Index()
         {
+            ViewBag.customer = _context.Customers.FirstOrDefault(c => c.Account == "tuannguyen");
             return View();
         }
 
