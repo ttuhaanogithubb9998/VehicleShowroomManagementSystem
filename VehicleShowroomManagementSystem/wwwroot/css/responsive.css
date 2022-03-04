@@ -1,0 +1,27 @@
+@media (max-width: 991.98px){
+    .menu-area .mobile-nav-toggler {
+        display: block;
+    }
+
+    .menu-nav {
+        justify-content: space-between;
+    }
+    .header-action {
+        margin-right: 40px;
+    }
+
+    .header-action > ul li.header-btn {
+        display: none;
+    }
+
+    .transparent-header .menu-area.sticky-menu .mobile-nav-toggler {
+        color: #525252;
+    }
+
+    .main-header .container-fluid, .main-header.sticky-menu .container-fluid {
+        padding: 15px;
+    }
+
+
+
+}
