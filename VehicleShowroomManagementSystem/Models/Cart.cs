@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace VehicleShowroomManagementSystem.Models
@@ -22,5 +23,10 @@ namespace VehicleShowroomManagementSystem.Models
 
         [DisplayName("Khách hàng")]
         public Customer Customer { get; set; }
+
+        [DisplayName("Số lượng")]
+        [Required(ErrorMessage = "{0} không được bỏ trống")]
+        [DefaultValue(1)]
+        public int Quantity { get; set; } = 1;
     }
 }
