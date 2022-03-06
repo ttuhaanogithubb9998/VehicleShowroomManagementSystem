@@ -22,7 +22,7 @@ namespace VehicleShowroomManagementSystem.Models
         [DisplayName("Mật khẩu")]
         [Required(ErrorMessage = "{0} không được bỏ trống!")]
         [StringLength(20, MinimumLength = 6, ErrorMessage = "{0} từ 6 - 20 ký tự")]
-        public string Password { get; set; }
+        public string Password { get; set; }    
 
         [DisplayName("Họ và tên")]
         [Required(ErrorMessage = "{0} không được bỏ trống!")]

@@ -1,0 +1,55 @@
+﻿<!-- Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="height:500px">
+        <form enctype="multipart/form-data" role="form" id="registration" name="registration" class="modal-content registration" style="padding:20px">
+            <h3 class="text-center text-info">Register</h3>
+            <div class="form-group">
+                <input type="text" name="Account" id="Account" class="form-control input-sm" placeholder="User Name">
+            </div>
+
+            <div class="form-group">
+                <input type="password" name="Password" id="Password" class="form-control input-sm" placeholder="Pasword">
+            </div>
+
+            <div class="form-group">
+                <input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-sm" placeholder="Password Confirmation">
+            </div>
+
+            <div class="form-group">
+                <input type="text" name="FullName" id="FullName" class="form-control input-sm" placeholder="Full Name">
+            </div>
+
+            <div class="form-group">
+                <input type="text" name="PhoneNumber" id="PhoneNumber" class="form-control input-sm" placeholder="Phone">
+            </div>
+
+            <div class="form-group">
+                <input type="text" name="Address" id="Address" class="form-control input-sm" placeholder="Address">
+            </div>
+
+            <div class="form-group">
+                <input type="text" name="Email" id="Email" class="form-control input-sm" placeholder="Email Address">
+            </div>
+
+
+            <div class="row">
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                    <div class="form-group">
+                        <label for="AvatarFile" class="custom-file-upload">
+                            <i class="fa fa-cloud-upload"></i> Avatar
+                        </label>
+                        <input type="file" name="AvatarFile" id="AvatarFile" class="form-control input-sm" placeholder="Avatar">
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                    <div class="form-group text-center">
+                        <img src="#" alt="Avatar" style="height:200px;width:200px;object-fit:cover" />
+                    </div>
+                </div>
+            </div>
+            <div class="text-right">
+                <button class="btn"> Register </button>
+            </div>
+        </form>
+    </div>
+</div>

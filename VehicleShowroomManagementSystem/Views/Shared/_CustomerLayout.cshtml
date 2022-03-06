@@ -46,15 +46,17 @@
                                     @{
                                         if (customer != null)
                                         {
-                                            <a style="display:block" asp-controller="Customers" asp-action="index">
+                                            <a style="display:block;margin-left:20px" asp-controller="Customers" asp-action="index">
                                                 <img src="~/image/avatar/customer/@customer.Avatar" style="height:14px;margin:0 5px" />
+                                                @customer.FullName
                                             </a>
                                         }
                                         else
                                         {
                                             <a data-toggle="modal" href="#loginModal"><i class="fa fa-user-circle"></i> LOGIN</a>
-                                            <a>REGISTER</a>
+                                            <a data-toggle="modal" href="#registerModal" >REGISTER</a>
                                             <partial name="LoginModal" />
+                                            <partial name="RegisterModal" />
 
                                         }
 
@@ -420,9 +422,11 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.js"></script>
     <script src="~/js/layout.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src ="~/js/login.js"></script>
+    <script src ="~/js/register.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

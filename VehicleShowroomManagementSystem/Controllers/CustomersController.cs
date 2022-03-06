@@ -9,7 +9,7 @@ using VehicleShowroomManagementSystem.Data;
 using VehicleShowroomManagementSystem.Models;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
-
+using Microsoft.AspNetCore.Http;
 namespace VehicleShowroomManagementSystem.Controllers
 {
     public class CustomersController : Controller
@@ -32,20 +32,23 @@ namespace VehicleShowroomManagementSystem.Controllers
         }
 
 
-        // GET: Customers/Login
+        // Customers/Login
         [HttpPost]
         public JsonResult Login(string account, string password)
         {
             try
             {
-                Customer Customer = _context.Customers.FirstOrDefault(c => c.Account == account & c.Password == password);
-                if (Customer != null)
+                Customer customer = _context.Customers.FirstOrDefault(c => c.Account == account & c.Password == password);
+                if (customer != null)
                 {
-
-                    return Json(new { code = 200, customer = Customer, msg = "Logged in successfully" });
+                    HttpContext.Response.Cookies.Append("Customer", customer.Account, new CookieOptions
+                    {
+                        Expires = DateTime.Now.AddDays(7)
+                    });
+                    return Json(new { code = 200, customer = customer, msg = "Logged in successfully" });
                 }
 
-                return Json(new { code = 200, msg = "Login failed" });
+                return Json(new { code = 300, msg = "Login failed" });
 
             }
             catch (Exception ex)
@@ -66,10 +69,10 @@ namespace VehicleShowroomManagementSystem.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register([Bind("Id,Account,Password,FullName,Address,PhoneNumber,Email,Avatar,Status,AvatarFile")] Customer customer)
+        //[ValidateAntiForgeryToken]
+        public JsonResult Register([Bind("Id,Account,Password,FullName,Address,PhoneNumber,Email,Avatar,Status,AvatarFile")] Customer customer)
         {
-            if (ModelState.IsValid)
+            try
             {
                 bool check = _context.Customers.Any(c => c.Account == customer.Account || c.PhoneNumber == customer.PhoneNumber || c.Email == customer.Email);
                 if (!check)
@@ -80,39 +83,48 @@ namespace VehicleShowroomManagementSystem.Controllers
                     int id = _context.Customers.FirstOrDefault(c => c.Account == customer.Account).Id;
                     customer.Id = id;
 
-                    if (customer.AvatarFile != null)
-                    {
 
-                        string fileName = id.ToString() + Path.GetExtension(customer.AvatarFile.FileName);
-                        string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "image", "avatar", "customer");
-                        string filePath = Path.Combine(uploadPath, fileName);
-                        using (FileStream fs = System.IO.File.Create(filePath))
-                        {
-                            customer.AvatarFile.CopyTo(fs);
-                            customer.Avatar = fileName;
-                        }
-                        _context.Update(customer);
-                        await _context.SaveChangesAsync();
-
-                    }
-                    else
+                    string fileName = customer.Id.ToString() + Path.GetExtension(customer.AvatarFile.FileName);
+                    string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "image", "avatar", "customer");
+                    string filePath = Path.Combine(uploadPath, fileName);
+                    using (FileStream fs = System.IO.File.Create(filePath))
                     {
-                        ViewBag.msgFile = "Hình ảnh không được bỏ trống!";
-                        _context.Remove(customer);
-                        await _context.SaveChangesAsync();
-                        return View(customer);
+                        customer.AvatarFile.CopyTo(fs);
+                        customer.Avatar = fileName;
                     }
+                    _context.Update(customer);
+                    _context.SaveChanges();
+
+                    HttpContext.Response.Cookies.Append("Customer", customer.Account, new CookieOptions
+                    {
+                        Expires = DateTime.Now.AddDays(7),
+                    });
+
+
+                    return Json(new
+                    {
+                        code = 200,
+                        msg = "Register successfully",
+                        customer = customer
+                    });
                 }
                 else
                 {
-                    _context.Remove(customer);
-                    await _context.SaveChangesAsync();
-                    ViewBag.msgCheck = "Tên tài khoản, SDT, Email đã tồn tại!";
-                    return View(customer);
+                    return Json(new
+                    {
+                        code = 300,
+                        msg = "Register failed"
+                    });
                 }
-                return RedirectToAction(nameof(Index));
+
             }
-            return View(customer);
+            catch (Exception ex)
+            {
+                return Json(new { code = 500, msg = "error" + ex.Message });
+
+            }
+
+
         }
 
         // GET: Customers/Edit/5

@@ -28,6 +28,7 @@ namespace VehicleShowroomManagementSystem
             services.AddControllersWithViews();
 
             services.AddDbContext<VehicleShowroomManagementSystemContext>(options => options.UseSqlServer(Configuration.GetConnectionString("VehicleShowroomManagementSystem")));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
