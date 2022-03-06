@@ -13,6 +13,8 @@ $(document).ready(() => {
             success: function (data) {
                 console.log(data);
                 if (data.code == 200) {
+
+                    // display avartar customer
                     $('li.header-top-login').html(
                         `<a style="display:block" href="/Customers/Index">
                             <img src="/image/avatar/customer/${data.customer.Avatar}" style="height:14px;margin:0 5px" />
@@ -20,12 +22,14 @@ $(document).ready(() => {
                          </a>`
                     );
 
+                    // modal hide
                     $('#loginModal').modal('hide');
                     $('.modal-backdrop').remove();
                     $("[data-dismiss=modal]").trigger({ type: "click" });
                     $('body').removeClass('modal-open');
                 }
                 else {
+                    // msg 
                     $('#loginModal span').html(`${data.msg}`);
                 }
             },

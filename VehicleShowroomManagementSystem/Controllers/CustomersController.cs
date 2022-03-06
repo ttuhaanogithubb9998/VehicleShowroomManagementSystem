@@ -10,25 +10,30 @@ using VehicleShowroomManagementSystem.Models;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+
 namespace VehicleShowroomManagementSystem.Controllers
 {
-    public class CustomersController : Controller
+    public class CustomersController : CheckCookiesController
     {
-        private readonly VehicleShowroomManagementSystemContext _context;
 
         private readonly IWebHostEnvironment _webHostEnvironment;
 
 
-        public CustomersController(VehicleShowroomManagementSystemContext context, IWebHostEnvironment webHostEnvironment)
+        public CustomersController(VehicleShowroomManagementSystemContext context, IWebHostEnvironment webHostEnvironment):base(context)
         {
             _webHostEnvironment = webHostEnvironment;
-            _context = context;
         }
 
         // GET: Customers
-        public async Task<IActionResult> Index()
+        public  IActionResult Index()
         {
-            return View(await _context.Customers.ToListAsync());
+            var customer = Ch_Cookie();
+            if (customer == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View(customer);
         }
 
 
@@ -59,17 +64,9 @@ namespace VehicleShowroomManagementSystem.Controllers
         }
 
 
-        // GET: Customers/Register
-        public IActionResult Register()
-        {
-            return View();
-        }
 
         // POST: Customers/Register
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        //[ValidateAntiForgeryToken]
         public JsonResult Register([Bind("Id,Account,Password,FullName,Address,PhoneNumber,Email,Avatar,Status,AvatarFile")] Customer customer)
         {
             try
@@ -126,6 +123,15 @@ namespace VehicleShowroomManagementSystem.Controllers
 
 
         }
+
+        public IActionResult Logout()
+        {
+
+            HttpContext.Response.Cookies.Delete("Customer");
+
+            return RedirectToAction("index", "Home");
+        }
+
 
         // GET: Customers/Edit/5
         public async Task<IActionResult> Edit(int? id)
