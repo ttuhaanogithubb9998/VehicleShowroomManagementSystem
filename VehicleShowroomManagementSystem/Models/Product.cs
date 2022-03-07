@@ -13,6 +13,11 @@ namespace VehicleShowroomManagementSystem.Models
     {
         public int Id { get; set; }
 
+        [DisplayName("Tên")]
+        [Required(ErrorMessage = "{0} không được bỏ trống!")]
+        public string Name { get; set; }
+
+
         [DisplayName("Loại phương tiện")]
         public int VehicleTypeId { get; set; }
 
