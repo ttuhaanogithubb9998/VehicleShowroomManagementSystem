@@ -172,7 +172,7 @@ namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
             }
             else
             {
-                ViewBag.Msg = "Login failed!";
+                ViewBag.Msg = "Login failed! Try again!";
                 return View();
             }
         }
