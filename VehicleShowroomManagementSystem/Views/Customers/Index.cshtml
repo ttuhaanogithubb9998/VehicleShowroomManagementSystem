@@ -1,36 +1,71 @@
 ﻿@model VehicleShowroomManagementSystem.Models.Customer
 
 
-<div class="customer">
-    <div class="row ml-xl-4 mr-xl-4">
-        <div class="col-xl-3 col-md-12">
-            <div class="avatar">
-                <div class="img mb-3">
-                    <img src="~/image/avatar/customer/@Model.Avatar" alt="" class="w-100">
+<div class="customer container" style="margin-top:100px">
+    <div class="row ml-xl-5 mr-xl-5">
+        <partial name="NavbarCustomer" />
+        <div class="col-xl-10 col-ms-12">
+            <h4 class="text-center">Carts</h4>
+            <div class="card p-4">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item container">
+                        <div class="row">
+                            <div class="col-2">
+                                <h6>Product</h6>
+                            </div>
+                            <div class="col-3">
+                                <h6>Description</h6>
+                            </div>
+                            <div class="col-3">
+                                <h6>Price</h6>
+                            </div>
+                            <div class="col-2">
+                                <h6>Quantity</h6>
+                            </div>
+                            <div class="col-2">
+                                <h6>Unit price</h6>
+                            </div>
+                        </div>
+                    </li>
+
+                    @{
+                        foreach (var item in Model.Carts)
+                        {
+                            <li class="list-group-item container">
+                                <div class="row">
+                                    <div class="col-2">
+                                        <a asp-controller="Products" asp-action="Details" asp-route-id="@item.Product.Id">
+                                            <img class="w-100" src="~/image/avatar/product/@item.Product.ProductImages[0].Path" />
+                                        </a>
+                                    </div>
+                                    <div class="col-3">
+                                        <a asp-controller="Products" asp-action="Details" asp-route-id="@item.Product.Id">
+                                            @item.Product.Description.Substring(0, item.Product.Description.Length > 30 ? 30 : item.Product.Description.Length)...
+                                        </a>
+                                    </div>
+                                    <div class="col-2">
+                                        @item.Product.Price $
+                                    </div>
+                                    <div class="col-3">
+                                        @item.Quantity
+                                    </div>
+                                    <div class="col-2">
+                                        <span class="text-danger">
+                                            @{
+                                                int total = @item.Product.Price * @item.Quantity;
+                                            }
+                                            @total $
+                                        </span>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    }
+                </ul>
+                <div class="text-right mt-3">
+                    <a class="btn btn-info" asp-controller="Carts" asp-action="Pay">Pay</a>
                 </div>
             </div>
-            <div class="navbar-sub-customer">
-                <ul class="list-group">
-                    <li class="list-group-item"><a asp-controller="Customers" asp-action="Cart">Cart</a></li>
-                    <li class="list-group-item"><a asp-controller="Customers" asp-action="Invoices">Invoices</a></li>
-                    <li class="list-group-item"><a asp-controller="Customers" asp-action="Edit">Edit Account</a></li>
-                </ul>
-            </div>
-            <div class="logout mt-5">
-                <a asp-controller="Customers" asp-action="Logout" class="btn btn-danger">Đăng xuất</a>
-            </div>
-        </div>
-        <div class="col-xl-9 col-md-12">
-            <ul class="list-group list-group-flush">
-                @{
-                    foreach (var item in Model.Carts)
-                    {
-                        <li class="list-group-item">
-                            
-                        </li>
-                    }
-                }
-            </ul>
         </div>
     </div>
 </div>

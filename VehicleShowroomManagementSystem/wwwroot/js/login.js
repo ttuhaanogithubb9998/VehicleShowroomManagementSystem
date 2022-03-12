@@ -17,10 +17,24 @@ $(document).ready(() => {
                     // display avartar customer
                     $('li.header-top-login').html(
                         `<a style="display:block" href="/Customers/Index">
-                            <img src="/image/avatar/customer/${data.customer.Avatar}" style="height:14px;margin:0 5px" />
-                            ${data.customer.FullName}
+                            <img src="/image/avatar/customer/${data.customer.avatar}" style="height:14px;margin:0 5px" />
+                            ${data.customer.fullName}
                          </a>`
                     );
+
+
+                    // quantity cart customer
+                    $(
+                        `<li class="header-shop-cart">
+                            <a href = "Customers/Index">
+                                <i class="fa fa-shopping-basket"></i><span>${data.quantityProduct}</span>
+                            </a>
+                        </li>`
+                    ).insertBefore('#getaquocte');
+
+                    $('body').css("padding",'0')
+
+
 
                     // modal hide
                     $('#loginModal').modal('hide');

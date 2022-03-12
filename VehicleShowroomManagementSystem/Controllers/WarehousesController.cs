@@ -10,13 +10,11 @@ using VehicleShowroomManagementSystem.Models;
 
 namespace VehicleShowroomManagementSystem.Controllers
 {
-    public class WarehousesController : Controller
+    public class WarehousesController : CheckCookiesController
     {
-        private readonly VehicleShowroomManagementSystemContext _context;
 
-        public WarehousesController(VehicleShowroomManagementSystemContext context)
+        public WarehousesController(VehicleShowroomManagementSystemContext context):base(context)
         {
-            _context = context;
         }
 
         // GET: Warehouses
@@ -48,6 +46,7 @@ namespace VehicleShowroomManagementSystem.Controllers
         // GET: Warehouses/Create
         public IActionResult Create()
         {
+            Ch_Cookie();
             ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Description");
             return View();
         }

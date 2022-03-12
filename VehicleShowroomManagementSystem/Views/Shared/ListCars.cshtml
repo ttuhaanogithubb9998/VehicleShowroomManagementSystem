@@ -1,0 +1,201 @@
+﻿@model IEnumerable<Product>
+
+@{
+    IEnumerable<VehicleShowroomManagementSystem.Models.VehicleType> vehicleTypes = ViewBag.vehicleTypes;
+    IEnumerable<Branch> branches = ViewBag.branches;
+    IEnumerable<Manufacturer> manufacturers = ViewBag.manufacturers;
+    Product featuredVehicles = ViewBag.featuredVehicles;
+    VehicleShowroomManagementSystem.Models.Employee employee = ViewBag.employee;
+
+}
+
+<!-- inventory-list-area -->
+<section class="inventory-list-area gray-lite-bg pt-120 pb-120">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-5 col-lg-6">
+                <div class="section-title text-center mb-35">
+                    <h2 class="title">@ViewBag.nameList</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-xl-8 col-lg-7 col-md-9">
+                @{
+                    foreach (var item in Model)
+                    {
+                        <div class="inventory-list-item">
+                            <div class="inventory-list-thumb">
+                                @*<img src="~/image/avatar/product/@item.ProductImages[0]" alt="">*@
+                                <img src="https://themebeyond.com/html/carnation/carnation/img/images/inventory_list_img05.jpg" alt="">
+                            </div>
+                            <div class="inventory-list-content">
+                                <div class="inv-content-top">
+                                    <ul>
+                                        <li class="option">
+                                            <a asp-controller="Products" asp-action="Manafacturer" asp-route-id="@item.Manufacturer.Id">@item.Manufacturer.Name</a>
+                                            <a asp-controller="Products" asp-action="VehicleType" asp-route-id="@item.VehicleType.Id">@item.VehicleType.Name</a>
+                                        </li>
+                                        <li class="price">$@item.Price</li>
+                                    </ul>
+                                </div>
+                                <h4><a asp-controller="Products" asp-action="Details" asp-route-id="@item.Id">@item.Name</a></h4>
+                                <p class="location">
+                                    Branch:
+                                    @{
+                                        foreach (var branch in item.Warehouses)
+                                        {
+                                            <span>@branch.Branch.Name, </span>
+                                        }
+                                    }
+                                </p>
+                                <div class="inv-item-meta">
+                                    <ul>
+                                        <li class="call"><a href="tel:0987654321"><i class="fa fa-phone"></i>Call</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+
+            </div>
+            <div class="col-xl-4 col-lg-5 col-md-9">
+                <aside class="inventory-sidebar">
+                    <div class="widget inventory-widget">
+                        <div class="inv-widget-title mb-25">
+                            <h5 class="title">Find Perfect Vehicles</h5>
+                        </div>
+                        <form asp-controller="Products" asp-action="Filter" class="sidebar-find-car">
+                            <div class="form-grp">
+                                <i class="fa fa-map-marker"></i>
+                                <select name="Branch" class="selected">
+                                    @{
+                                        foreach (var item in branches)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="form-grp">
+                                <i class="fa fa-car"></i>
+                                <select name="VehicleType" class="selected">
+                                    @{
+                                        foreach (var item in vehicleTypes)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-grp">
+                                <i class="fa fa-diamond"></i>
+                                <select name="VehicleType" class="selected">
+                                    @{
+                                        foreach (var item in manufacturers)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-grp">
+                                <i class="fa fa-money"></i>
+                                <select name="PriceId" class="selected">
+                                    <option value="1">$10000 - $15000</option>
+                                    <option value="2">$15000 - $25000</option>
+                                    <option value="3">$25000 - $35000</option>
+                                    <option value="4">$35000 - $55000</option>
+                                    <option value="5">$55000 - $100000</option>
+                                </select>
+                            </div>
+                            <button class="btn">Find New Vehicles</button>
+                        </form>
+                    </div>
+                    <div class="widget inventory-widget">
+                        <div class="inv-widget-title mb-25">
+                            <h5 class="title">Featured Vehicles</h5>
+                        </div>
+                        <div class="sidebar-fv-active">
+                            <div class="sidebar-fv-item" data-background="img/images/sidebar_featured_vehicle01.jpg">
+                                <div class="fv-top-tag">
+                                    <ul>
+                                        <li><a asp-controller="Products" asp-action="VehicleTypes" asp-route-id="@featuredVehicles.VehicleType.Id">@featuredVehicles.VehicleType.Name</a></li>
+                                        <li><a asp-controller="Products" asp-action="Manufacturers" asp-route-id="@featuredVehicles.Manufacturer.Id">@featuredVehicles.Manufacturer.Name</a></li>
+                                    </ul>
+                                </div>
+                                <div class="sidebar-fv-content">
+                                    <h5>$@featuredVehicles.Price</h5>
+                                    <p><a asp-controller="Products" asp-action="Details" asp-route-id="@featuredVehicles.Id">@featuredVehicles.Name</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="widget inventory-widget">
+                        <div class="inv-widget-title mb-25">
+                            <h5 class="title">Listed By Advisor</h5>
+                        </div>
+                        <div class="advisor-wrap mb-25">
+                            @{
+                                if (employee != null)
+                                {
+                                    <div class="advisor-thumb">
+                                        <img src="~/image/avatar/employee/@employee.Avatar" alt="">
+                                    </div>
+                                    <div class="advisor-info">
+                                        <h5>@employee.FullName</h5>
+                                        <div class="phone">
+                                            <a href="tel:@employee.PhoneNumber"><i class="fa fa-phone"></i> @employee.PhoneNumber</a>
+                                        </div>
+                                    </div>
+                                }
+                            }
+
+                        </div>
+                        <form action="#" class="advisor-form">
+                            <input type="text" placeholder="Your Name *">
+                            <input type="email" placeholder="Your Email *">
+                            <textarea name="message" placeholder="I'm interest in { Linting Single }"></textarea>
+                            <button class="btn">Search</button>
+                        </form>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- inventory-list-area-end -->
+<!-- car-category-area -->
+<section class="car-category-area pt-120 pb-120">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-6 col-lg-7">
+                <div class="section-title text-center mb-70">
+                    <h2 class="overlay-title">Browse cars</h2>
+                    <span class="sub-title">categories cars</span>
+                    <h2 class="title">Browse by Type cars</h2>
+                    <div class="line"><img src="https://themebeyond.com/html/carnation/carnation/img/images/title_line.png" alt=""></div>
+                </div>
+            </div>
+        </div>
+        <div class="row car-category-active">
+            @{
+                foreach (var item in vehicleTypes)
+                {
+                    <div class="col">
+                        <div class="car-cat-item">
+                            <a asp-controller="Products" asp-action="VehicleTypes" asp-route-id="@item.Id">
+                                <img src="~/image/logo/vehicletype/@item.Image" alt="">
+                                <span>@item.Name</span>
+                            </a>
+                        </div>
+                    </div>
+                }
+            }
+
+        </div>
+    </div>
+</section>
+<!-- car-category-area-end -->

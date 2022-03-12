@@ -19,19 +19,20 @@ namespace VehicleShowroomManagementSystem.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
 
 
-        public CustomersController(VehicleShowroomManagementSystemContext context, IWebHostEnvironment webHostEnvironment):base(context)
+        public CustomersController(VehicleShowroomManagementSystemContext context, IWebHostEnvironment webHostEnvironment) : base(context)
         {
             _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: Customers
-        public  IActionResult Index()
+        public IActionResult Index()
         {
             var customer = Ch_Cookie();
             if (customer == null)
             {
                 return RedirectToAction("Index", "Home");
             }
+            //var cars = _context.Carts.Include()
 
             return View(customer);
         }
@@ -46,11 +47,14 @@ namespace VehicleShowroomManagementSystem.Controllers
                 Customer customer = _context.Customers.FirstOrDefault(c => c.Account == account & c.Password == password);
                 if (customer != null)
                 {
+                    int quantityProduct = _context.Carts.Where(c => c.CustomerId == customer.Id).Count();
                     HttpContext.Response.Cookies.Append("Customer", customer.Account, new CookieOptions
                     {
                         Expires = DateTime.Now.AddDays(7)
                     });
-                    return Json(new { code = 200, customer = customer, msg = "Logged in successfully" });
+
+
+                    return Json(new { code = 200, quantityProduct = quantityProduct, customer = customer, msg = "Logged in successfully" });
                 }
 
                 return Json(new { code = 300, msg = "Login failed" });
@@ -132,6 +136,26 @@ namespace VehicleShowroomManagementSystem.Controllers
             return RedirectToAction("index", "Home");
         }
 
+
+        public async Task<IActionResult> Pay(int Id)
+        {
+            var product = await _context.Products.Where(p => p.Id == Id).FirstOrDefaultAsync();
+            Ch_Cookie();
+
+            return View(product);
+        }
+
+        public async Task<IActionResult> Invoices()
+        {
+            var customer = Ch_Cookie();
+            if (customer == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            var invoices = await _context.Invoices.Where(i => i.Customer.Id == customer.Id).Include(i => i.InvoiceDetails).ToListAsync();
+
+            return View(invoices);
+        }
 
         // GET: Customers/Edit/5
         public async Task<IActionResult> Edit(int? id)

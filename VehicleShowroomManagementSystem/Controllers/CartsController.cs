@@ -59,7 +59,7 @@ namespace VehicleShowroomManagementSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ProductId,CustomerId")] Cart cart)
+        public async Task<IActionResult> Create([Bind("Id,ProductId,CustomerId,Quantity")] Cart cart)
         {
             if (ModelState.IsValid)
             {
@@ -95,7 +95,7 @@ namespace VehicleShowroomManagementSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductId,CustomerId")] Cart cart)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductId,CustomerId,Quantity")] Cart cart)
         {
             if (id != cart.Id)
             {

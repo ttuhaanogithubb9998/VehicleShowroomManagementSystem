@@ -1,6 +1,16 @@
 
 $(document).ready(function () {
 
+    let inputImg = $('#AvatarFile');
+
+    function loadFile(e) {
+        let outputImg = document.getElementById('outputImg');
+        outputImg.src = URl.createObjectURL(e.target.files[0]);
+        outputImg.onload = ()=>{
+            URL.revokeObjectURL(outputImg.src);
+        }
+    }
+
     $.validator.addMethod('phone', function (value, element) {
 
         let Regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
@@ -104,6 +114,7 @@ $(document).ready(function () {
                         console.log(res);
                     }
                 })
+
 
                 //$.ajax({
                 //    url: "/Customers/Register",

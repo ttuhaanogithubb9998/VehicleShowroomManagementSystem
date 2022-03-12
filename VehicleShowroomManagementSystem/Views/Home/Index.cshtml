@@ -1,4 +1,219 @@
-﻿@{
+﻿
+@model IEnumerable<VehicleShowroomManagementSystem.Models.Product>
+@{
     ViewData["Title"] = "Home";
+
+    IEnumerable<VehicleShowroomManagementSystem.Models.Employee> employees = ViewBag.employees;
+    IEnumerable<VehicleShowroomManagementSystem.Models.VehicleType> vehicleTypes = ViewBag.vehicleTypes;
+    IEnumerable<VehicleShowroomManagementSystem.Models.Manufacturer> manufacturers = ViewBag.manufacturers;
+
 }
 
+<!-- slider-area -->
+<section class="slider-area">
+    <div class="slider-active">
+        <div class="single-slider">
+            <div class="slider-angle-shape" data-background="https://themebeyond.com/html/carnation/carnation/img/slider/slider_shape.png"></div>
+            <div class="slider-bg" data-background="https://themebeyond.com/html/carnation/carnation/img/slider/slider_bg01.jpg"></div>
+            <div class="container custom-container">
+                <div class="row">
+                    <div class="col-xl-5 col-lg-6">
+                        <div class="slider-content">
+                            <span data-animation="fadeInUp" data-delay=".3s">best auto service</span>
+                            <h2 data-animation="fadeInUp" data-delay=".6s">Professional Service Provide</h2>
+                            <p data-animation="fadeInUp" data-delay=".9s">Find the Perfect Car With Our Car Finder Tool</p>
+                            <a href="#" class="btn" data-animation="fadeInUp" data-delay="1.2s"><span>+</span> discover more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="single-slider">
+            <div class="slider-angle-shape" data-background="https://themebeyond.com/html/carnation/carnation/img/slider/slider_shape.png"></div>
+            <div class="slider-bg" data-background="https://themebeyond.com/html/carnation/carnation/img/slider/slider_bg01.jpg"></div>
+            <div class="container custom-container">
+                <div class="row">
+                    <div class="col-xl-5 col-lg-6">
+                        <div class="slider-content">
+                            <span data-animation="fadeInUp" data-delay=".3s">best auto service</span>
+                            <h2 data-animation="fadeInUp" data-delay=".6s">Professional Service Provide</h2>
+                            <p data-animation="fadeInUp" data-delay=".9s">Find the Perfect Car With Our Car Finder Tool</p>
+                            <a href="#" class="btn" data-animation="fadeInUp" data-delay="1.2s"><span>+</span> discover more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- car-search-area -->
+
+
+<section class="car-search-area gray-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="car-search-wrap">
+                    <div class="small-title mb-20">
+                        <h4> LOOKING FOR A <span>CAR?</span></h4>
+                    </div>
+                    <form asp-controller="Products" asp-action="Search" method="get" class="car-search-form container" >
+                        <div class="row align-items-end">
+                            <div class="col col-xl-4 col-md-12">
+                                <label>Manufacturer</label>
+                                <select name="ManufacturerId" class="selected">
+                                    @{
+                                        foreach (var item in manufacturers)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    }
+
+                                </select>
+                            </div>
+                            <div class="col col-xl-4 col-md-12">
+                                <label>Vehicle Type</label>
+                                <select name="VehicleTypeId" class="selected">
+                                    @{
+                                        foreach (var item in vehicleTypes)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="col col-xl-4 col-md-12">
+                                <button  class="btn mt-1">SELECT VEHICLE</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="car-search-map-icon"><i class="flaticon-location"></i></div>
+                    <div class="car-search-shape"><img src="img/images/car_search_shape.png" alt=""></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- car-search-area-end -->
+<!-- popular-selling-brand -->
+<section class="popular-selling-brand gray-bg pt-50 pb-120">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="popular-selling-wrap">
+                    <div class="popular-selling-top">
+                        <div class="popular-selling-title">
+                            <h4>popular selling items</h4>
+                        </div>
+                        <div class="see-all-brand">
+                            <a href="#">See all Makes</a>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        @{
+                            foreach (var item in manufacturers)
+                            {
+                                <div class="col-lg-3 col-md-4 col-sm-6">
+                                    <div class="popular-selling-items">
+                                        <a asp-action="Manufacturers" asp-controller="Products" asp-route-id="@item.Id"><img src="~/image/logo/manufacturer/@item.Image" alt=""></a>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="popular-selling-ad-banner">
+                    <a href="#"><img src="https://themebeyond.com/html/carnation/carnation/img/images/popular_selling_banner.jpg" alt=""></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- popular-selling-brand-end -->
+<!-- latest-cars-area -->
+<section class="latest-cars-area pt-120 pb-120">
+    <div class="container">
+
+        <div class="latest-cars-wrapper">
+            <div class="row latest-car-items-active">
+                @{
+                    foreach (var item in Model)
+                    {
+                        <div class="col-lg-4 col-md-6 grid-item grid-sizer cat-two">
+                            <div class="latest-car-item mb-60">
+                                <div class="latest-car-thumb mb-25">
+                                    <a href="inventory-details.html">
+                                        @*<img src="~/image/avatar/@item.ProductImages[0]" alt="">*@
+                                        <img src="https://themebeyond.com/html/carnation/carnation/img/images/released_cars_thumb01.jpg" alt="">
+                                    </a>
+                                </div>
+                                <div class="latest-car-content">
+                                    <div class="latest-car-content-top">
+                                        <h5><a href="inventory-details.html"></a>@item.Name</h5>
+                                        <span class="price">$@item.Price</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="latest-car-btn text-center mt-10">
+                        <a asp-controller="Products" asp-action="AllCars" class="btn">SHOW ALL CARS</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- latest-cars-area-end -->
+<!-- team-area -->
+<section class="team-area team-bg pt-120 pb-120" data-background="https://themebeyond.com/html/carnation/carnation/img/bg/team_bg.jpg">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-6 col-lg-7">
+                <div class="section-title text-center white-title mb-70">
+                    <span class="sub-title">our expert team</span>
+                    <h2 class="title">Our Customer Advisor</h2>
+                    <div class="line"><img src="https://themebeyond.com/html/carnation/carnation/img/images/title_line.png" alt=""></div>
+                </div>
+            </div>
+        </div>
+        <div class="row team-active">
+            @{
+                foreach (var item in employees)
+                {
+                    <div class="col-xl-3">
+                        <div class="team-item">
+                            <div class="team-thumb">
+                                <img src="~/image/avatar/employees/@item.Avatar" alt="">
+                            </div>
+                            <div class="team-social">
+                                <ul>
+                                    <li><a href="#"><i class="fa fa-facebook-f"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-linkedin-in"></i></a></li>
+                                    <li><a href="#"><i class="fa fa-pinterest-p"></i></a></li>
+                                </ul>
+                            </div>
+                            <div class="team-content">
+                                <h5>dealership points</h5>
+                                <a href="tel:@item.PhoneNumber" class="phone">@item.PhoneNumber</a>
+                                <a href="mailto: @item.Email" class="mail"><span class="__cf_email__" data-cfemail="91f4fcf8fde8d1e7f4f9f8f2f0e5f9f4fcf4bff2fefc">@item.Email</span></a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</section>
+<!-- team-area-end -->
+<partial name="VehicleType" />

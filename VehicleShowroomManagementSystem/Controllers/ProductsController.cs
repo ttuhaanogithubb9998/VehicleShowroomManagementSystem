@@ -10,13 +10,20 @@ using VehicleShowroomManagementSystem.Models;
 
 namespace VehicleShowroomManagementSystem.Controllers
 {
-    public class ProductsController : Controller
+    public class ProductsController : CheckCookiesController
     {
-        private readonly VehicleShowroomManagementSystemContext _context;
 
-        public ProductsController(VehicleShowroomManagementSystemContext context)
+        public ProductsController(VehicleShowroomManagementSystemContext context):base(context)
         {
-            _context = context;
+        }
+
+        private void DataViewList()
+        {
+            ViewBag.vehicleTypes = _context.VehicleTypes.ToList();
+            ViewBag.manufacturers = _context.Manufacturers.ToList();
+            ViewBag.branches = _context.Branches.ToList();
+            ViewBag.employee = _context.Employees.FirstOrDefault();
+            ViewBag.featuredVehicles = _context.Products.Include(p => p.InvoiceDetails).OrderByDescending(p => p.InvoiceDetails.Sum(i => i.Quantity)).FirstOrDefault();
         }
 
         // GET: Products
@@ -25,10 +32,111 @@ namespace VehicleShowroomManagementSystem.Controllers
             var vehicleShowroomManagementSystemContext = _context.Products.Include(p => p.Manufacturer).Include(p => p.VehicleType);
             return View(await vehicleShowroomManagementSystemContext.ToListAsync());
         }
+        
+        public async Task<IActionResult> AllCars()
+        {
+            var cars = await _context.Products.Include(p=>p.ProductImages).Include(p=>p.Manufacturer).Include(p=>p.VehicleType).Include(p=>p.Warehouses).ThenInclude(w=>w.Branch).Where(p=>p.Warehouses.Sum(w=>w.Stock)>0).ToListAsync();
+
+            DataViewList();
+            ViewBag.nameList = "All Cars";
+
+            return View(cars);
+        }
+
+
+
+        //Get Products/Search/
+        public async Task<IActionResult> Search (int ManufacturerId,int VehicleTypeId)
+        {
+            var products = await _context.Products.Include(p => p.ProductImages).Include(p => p.Manufacturer).Include(p => p.VehicleType).Include(p => p.Warehouses).ThenInclude(w => w.Branch).Where(p => p.Manufacturer.Id == ManufacturerId && p.VehicleType.Id == VehicleTypeId).ToListAsync();
+
+            DataViewList();
+            ViewBag.nameList = "Cars List";
+
+
+            return View(products);
+        }
+
+        //Get Products/Filter/
+        public async Task<IActionResult> Filter (int BranchId, int VehicleTypeId,int PriceId,int ManufacturerId)
+        {
+
+
+
+            var products = _context.Products.Include(p => p.ProductImages).Include(p => p.Manufacturer).Include(p => p.VehicleType).Include(p => p.Warehouses).ThenInclude(w => w.Branch).Where(p => p.Manufacturer.Id == ManufacturerId && p.VehicleType.Id == VehicleTypeId && p.Warehouses.Where(w => w.Branch.Id == BranchId).Any(w=>w.Stock>0));
+
+
+            List<Product> _products =new List<Product>();
+
+            switch (PriceId)
+            {
+                case 1:
+                    _products = await products.Where(p => p.Price >= 10000 && p.Price <= 15000).ToListAsync();
+                    break;
+                case 2:
+                    _products = await products.Where(p => p.Price >= 15000 && p.Price <= 25000).ToListAsync();
+                    break;
+                case 3:
+                    _products = await products.Where(p => p.Price >= 25000 && p.Price <= 35000).ToListAsync();
+                    break;
+                case 4:
+                    _products = await products.Where(p => p.Price >= 35000 && p.Price <= 55000).ToListAsync();
+                    break;
+                case 5:
+                    _products = await products.Where(p => p.Price >= 55000 && p.Price <= 100000).ToListAsync();
+                    break;
+                default:
+                    ViewBag.msgFilter = "Not found";
+                    break;
+            }
+
+            DataViewList();
+            ViewBag.nameList = "Cars List";
+
+
+            return View(_products);
+        }
+
+
+        //get Products/VehicleTypes
+
+        public async Task<IActionResult> VehicleTypes (int Id)
+        {
+            if(Id == 0)
+            {
+                return RedirectToAction("AllCars", "Products"); 
+            }
+
+            var products = await  _context.Products.Include(p => p.ProductImages).Include(p => p.Manufacturer).Include(p => p.VehicleType).Include(p => p.Warehouses).ThenInclude(w => w.Branch).Where(p => p.VehicleTypeId == Id).ToListAsync();
+
+            DataViewList();
+            ViewBag.nameList = "Cars List";
+
+            return View(products);
+        }
+
+        //get Products/Manufacture
+
+        public async Task<IActionResult> Manufacturer(int Id)
+        {
+            if(Id == 0)
+            {
+                return RedirectToAction("AllCars", "Products"); 
+            }
+
+            var products = await  _context.Products.Include(p => p.ProductImages).Include(p => p.Manufacturer).Include(p => p.VehicleType).Include(p => p.Warehouses).ThenInclude(w => w.Branch).Where(p => p.ManufacturerId == Id).ToListAsync();
+
+            DataViewList();
+            ViewBag.nameList = "Cars List";
+
+            return View(products);
+        }
 
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            Ch_Cookie();
+
             if (id == null)
             {
                 return NotFound();
@@ -36,7 +144,7 @@ namespace VehicleShowroomManagementSystem.Controllers
 
             var product = await _context.Products
                 .Include(p => p.Manufacturer)
-                .Include(p => p.VehicleType)
+                .Include(p => p.VehicleType).Include(p=>p.ProductImages).Include(p=>p.Warehouses)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (product == null)
             {

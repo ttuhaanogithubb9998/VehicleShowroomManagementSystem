@@ -10,13 +10,11 @@ using VehicleShowroomManagementSystem.Models;
 
 namespace VehicleShowroomManagementSystem.Controllers
 {
-    public class InvoicesController : Controller
+    public class InvoicesController : CheckCookiesController
     {
-        private readonly VehicleShowroomManagementSystemContext _context;
 
-        public InvoicesController(VehicleShowroomManagementSystemContext context)
+        public InvoicesController(VehicleShowroomManagementSystemContext context):base(context)
         {
-            _context = context;
         }
 
         // GET: Invoices
@@ -46,6 +44,8 @@ namespace VehicleShowroomManagementSystem.Controllers
         // GET: Invoices/Create
         public IActionResult Create()
         {
+            Ch_Cookie();
+
             return View();
         }
 

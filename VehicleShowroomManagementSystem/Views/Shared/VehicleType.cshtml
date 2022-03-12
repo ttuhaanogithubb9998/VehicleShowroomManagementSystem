@@ -1,0 +1,38 @@
+﻿@{
+    IEnumerable<VehicleShowroomManagementSystem.Models.VehicleType> vehicleTypes = ViewBag.vehicleTypes;
+}
+
+
+<!-- car-category-area -->
+
+<section class="car-category-area pt-120 pb-120">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-6 col-lg-7">
+                <div class="section-title text-center mb-70">
+                    <h2 class="overlay-title">Browse cars</h2>
+                    <span class="sub-title">categories cars</span>
+                    <h2 class="title">Browse by Type cars</h2>
+                    <div class="line"><img src="https://themebeyond.com/html/carnation/carnation/img/images/title_line.png" alt=""></div>
+                </div>
+            </div>
+        </div>
+        <div class="row car-category-active">
+            @{
+                foreach (var item in vehicleTypes)
+                {
+                    <div class="col">
+                        <div class="car-cat-item">
+                            <a asp-controller="Products" asp-action="VehicleTypes" asp-route-id="@item.Id">
+                                <img src="~/image/logo/vehicletype/@item.Image" alt="">
+                                <span>@item.Name</span>
+                            </a>
+                        </div>
+                    </div>
+                }
+            }
+
+        </div>
+    </div>
+</section>
+<!-- car-category-area-end -->

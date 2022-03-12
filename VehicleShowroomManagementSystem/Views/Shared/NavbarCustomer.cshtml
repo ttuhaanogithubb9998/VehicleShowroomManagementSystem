@@ -1,0 +1,20 @@
+﻿
+
+
+<div class="col-xl-2 col-ms-12">
+    <div class="avatar">
+        <div class="img mb-3 text-center">
+            <img src="~/image/avatar/customer/@Model.Avatar" alt="" class="w-50">
+        </div>
+    </div>
+    <div class="navbar-sub-customer">
+        <ul class="list-group">
+            <li class="list-group-item"><a asp-controller="Customers" asp-action="Cart">Cart</a></li>
+            <li class="list-group-item"><a asp-controller="Customers" asp-action="Invoices">Invoices</a></li>
+            <li class="list-group-item"><a asp-controller="Customers" asp-action="Edit">Edit Account</a></li>
+        </ul>
+    </div>
+    <div class="logout mt-1 text-center mb-4">
+        <a asp-controller="Customers" asp-action="Logout" class="btn btn-danger" style="background: #b41010">Logout</a>
+    </div>
+</div>

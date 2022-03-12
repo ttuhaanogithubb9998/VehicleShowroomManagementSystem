@@ -75,7 +75,7 @@ namespace VehicleShowroomManagementSystem.Controllers
                     if (vehicleType.ImageFile != null)
                     {
                         var fileName = id.ToString() + Path.GetExtension(vehicleType.ImageFile.FileName);
-                        var uploadPath = Path.Combine(_webHostEnvironment.ContentRootPath, "image", "logo", "vehicleType");
+                        var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "image", "logo", "vehicleType");
                         var filePath = Path.Combine(uploadPath, fileName);
 
                         using (FileStream fs = System.IO.File.Create(filePath))
@@ -94,6 +94,9 @@ namespace VehicleShowroomManagementSystem.Controllers
 
                         return View(vehicleType);
                     }
+                    _context.Update(vehicleType);
+                    await _context.SaveChangesAsync();
+
                     return RedirectToAction(nameof(Index));
                 }
                 else
