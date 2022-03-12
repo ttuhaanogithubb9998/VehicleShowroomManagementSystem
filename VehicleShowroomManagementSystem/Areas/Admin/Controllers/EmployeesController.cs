@@ -161,12 +161,12 @@ namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
 
         [HttpPost]
 
-        public IActionResult Login(string Username, string Password)
+        public IActionResult Login(string Account, string Password)
         {
-            int count = _context.Employees.Count(a => a.Account == Username && a.Password == Password);
+            int count = _context.Employees.Count(a => a.Account == Account && a.Password == Password);
             if (count > 0)
             {
-                HttpContext.Session.SetString("Account", Username);
+                HttpContext.Session.SetString("Account", Account);
 
                 return RedirectToAction("Index", "Home");
             }
