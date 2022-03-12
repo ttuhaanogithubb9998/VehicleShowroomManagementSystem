@@ -25,6 +25,15 @@ namespace VehicleShowroomManagementSystem
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromDays(15);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
             services.AddControllersWithViews();
 
             services.AddDbContext<VehicleShowroomManagementSystemContext>(options => options.UseSqlServer(Configuration.GetConnectionString("VehicleShowroomManagementSystem")));
@@ -50,6 +59,8 @@ namespace VehicleShowroomManagementSystem
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.UseEndpoints(endpoints => 
             {
