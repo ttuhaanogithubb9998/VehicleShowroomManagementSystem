@@ -117,7 +117,7 @@
                             {
                                 <div class="col-lg-3 col-md-4 col-sm-6">
                                     <div class="popular-selling-items">
-                                        <a asp-action="Manufacturers" asp-controller="Products" asp-route-id="@item.Id"><img src="~/image/logo/manufacturer/@item.Image" alt=""></a>
+                                        <a asp-action="Manufacturer" asp-controller="Products" asp-route-id="@item.Id"><img src="~/image/logo/manufacturer/@item.Image" alt=""></a>
                                     </div>
                                 </div>
                             }
@@ -146,14 +146,14 @@
                         <div class="col-lg-4 col-md-6 grid-item grid-sizer cat-two">
                             <div class="latest-car-item mb-60">
                                 <div class="latest-car-thumb mb-25">
-                                    <a href="inventory-details.html">
+                                   <a asp-controller="Products" asp-action="Details" asp-route-id="@item.Id">
                                         @*<img src="~/image/avatar/@item.ProductImages[0]" alt="">*@
                                         <img src="https://themebeyond.com/html/carnation/carnation/img/images/released_cars_thumb01.jpg" alt="">
                                     </a>
                                 </div>
                                 <div class="latest-car-content">
                                     <div class="latest-car-content-top">
-                                        <h5><a href="inventory-details.html"></a>@item.Name</h5>
+                                        <h5><a asp-controller="Products" asp-action="Details" asp-route-id="@item.Id"></a>@item.Name</h5>
                                         <span class="price">$@item.Price</span>
                                     </div>
 

@@ -32,7 +32,6 @@ namespace VehicleShowroomManagementSystem.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            //var cars = _context.Carts.Include()
 
             return View(customer);
         }
@@ -44,7 +43,7 @@ namespace VehicleShowroomManagementSystem.Controllers
         {
             try
             {
-                Customer customer = _context.Customers.FirstOrDefault(c => c.Account == account & c.Password == password);
+                Customer customer = _context.Customers.FirstOrDefault(c => c.Account == account && c.Password == password);
                 if (customer != null)
                 {
                     int quantityProduct = _context.Carts.Where(c => c.CustomerId == customer.Id).Count();
@@ -84,17 +83,20 @@ namespace VehicleShowroomManagementSystem.Controllers
                     int id = _context.Customers.FirstOrDefault(c => c.Account == customer.Account).Id;
                     customer.Id = id;
 
-
-                    string fileName = customer.Id.ToString() + Path.GetExtension(customer.AvatarFile.FileName);
-                    string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "image", "avatar", "customer");
-                    string filePath = Path.Combine(uploadPath, fileName);
-                    using (FileStream fs = System.IO.File.Create(filePath))
+                    if (customer.AvatarFile != null)
                     {
-                        customer.AvatarFile.CopyTo(fs);
-                        customer.Avatar = fileName;
+                        string fileName = customer.Id.ToString() + Path.GetExtension(customer.AvatarFile.FileName);
+                        string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "image", "avatar", "customer");
+                        string filePath = Path.Combine(uploadPath, fileName);
+                        using (FileStream fs = System.IO.File.Create(filePath))
+                        {
+                            customer.AvatarFile.CopyTo(fs);
+                            customer.Avatar = fileName;
+                        }
+                        _context.Update(customer);
+                        _context.SaveChanges();
                     }
-                    _context.Update(customer);
-                    _context.SaveChanges();
+
 
                     HttpContext.Response.Cookies.Append("Customer", customer.Account, new CookieOptions
                     {
@@ -106,7 +108,7 @@ namespace VehicleShowroomManagementSystem.Controllers
                     {
                         code = 200,
                         msg = "Register successfully",
-                        customer = customer
+                        customer
                     });
                 }
                 else
@@ -137,14 +139,16 @@ namespace VehicleShowroomManagementSystem.Controllers
         }
 
 
-        public async Task<IActionResult> Pay(int Id)
-        {
-            var product = await _context.Products.Where(p => p.Id == Id).FirstOrDefaultAsync();
-            Ch_Cookie();
 
-            return View(product);
+        // get carts customer 
+        public IActionResult Cart()
+        {
+            return RedirectToAction(nameof(Index));
         }
 
+
+
+        //get invoices customer
         public async Task<IActionResult> Invoices()
         {
             var customer = Ch_Cookie();
@@ -152,25 +156,28 @@ namespace VehicleShowroomManagementSystem.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            var invoices = await _context.Invoices.Where(i => i.Customer.Id == customer.Id).Include(i => i.InvoiceDetails).ToListAsync();
+            var invoices = await _context.Invoices.Where(i => i.Customer.Id == customer.Id).Include(i => i.InvoiceDetails).OrderByDescending(i => i.Date).ToListAsync();
 
             return View(invoices);
         }
 
-        // GET: Customers/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //get invoice details customer
 
-            var customer = await _context.Customers.FindAsync(id);
-            if (customer == null)
-            {
-                return NotFound();
-            }
-            return View(customer);
+        public async Task<IActionResult> InvoiceDetails(int Id)
+        {
+            Ch_Cookie();
+
+            Invoice invoice = await _context.Invoices.Include(i => i.Customer).Include(i => i.InvoiceDetails).ThenInclude(i => i.Product).ThenInclude(p => p.ProductImages).FirstOrDefaultAsync(i => i.Id == Id);
+
+            return View(invoice);
+        }
+
+
+        // GET: Customers/Edit/5
+        public IActionResult Edit()
+        {
+
+            return View(Ch_Cookie());
         }
 
         // POST: Customers/Edit/5
@@ -178,7 +185,7 @@ namespace VehicleShowroomManagementSystem.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Account,Password,FullName,Address,PhoneNumber,Email,Avatar,Status")] Customer customer)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Account,Password,FullName,Address,PhoneNumber,Email,Avatar,Status,AvatarFile")] Customer customer)
         {
             if (id != customer.Id)
             {
@@ -189,8 +196,37 @@ namespace VehicleShowroomManagementSystem.Controllers
             {
                 try
                 {
+                    bool check = _context.Customers.Any(c => (c.PhoneNumber == customer.PhoneNumber || c.Email == customer.Email) && c.Id != customer.Id);
+
+
+                    if (check)
+                    {
+                        Ch_Cookie();
+
+                        ViewBag.msg = "Email or phone number already in use!";
+
+
+                        return View(customer);
+                    }
+
+
+                    if (customer.AvatarFile != null)
+                    {
+                        string fileName = customer.Id.ToString() + Path.GetExtension(customer.AvatarFile.FileName);
+                        string uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "image", "avatar", "customer");
+                        string filePath = Path.Combine(uploadPath, fileName);
+                        using (FileStream fs = System.IO.File.Create(filePath))
+                        {
+                            customer.AvatarFile.CopyTo(fs);
+                            customer.Avatar = fileName;
+                        }
+                    }
+
+
                     _context.Update(customer);
                     await _context.SaveChangesAsync();
+
+                    return View(Ch_Cookie());
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -203,7 +239,6 @@ namespace VehicleShowroomManagementSystem.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
             return View(customer);
         }

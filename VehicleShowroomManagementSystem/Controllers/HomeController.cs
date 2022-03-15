@@ -18,14 +18,22 @@ namespace VehicleShowroomManagementSystem.Controllers
         public HomeController(VehicleShowroomManagementSystemContext context) : base(context)
         {
         }
+        private void DataViewList()
+        {
+            ViewBag.vehicleTypes = _context.VehicleTypes.ToList();
+            ViewBag.manufacturers = _context.Manufacturers.ToList();
+            ViewBag.branches = _context.Branches.ToList();
+            ViewBag.employee = _context.Employees.FirstOrDefault();
+            ViewBag.featuredVehicles = _context.Products.Include(p => p.InvoiceDetails).OrderByDescending(p => p.InvoiceDetails.Sum(i => i.Quantity)).FirstOrDefault();
+        }
 
         public IActionResult Index()
         {
             var customer = Ch_Cookie();
 
-            //var carts = _context.Products.Include(p => p.InvoiceDetails).Where(p => p.InvoiceDetails.Sum(i=>i.Quantity)>0).ToList();
 
-            var carts = _context.Products.Include(p=>p.ProductImages).ToList();
+
+            var carts = _context.Products.Include(p => p.ProductImages).ToList();
 
             ViewBag.employees = _context.Employees.ToList();
             ViewBag.manufacturers = _context.Manufacturers.ToList();
@@ -47,6 +55,18 @@ namespace VehicleShowroomManagementSystem.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Search(string str = "")
+        {
+
+            Ch_Cookie();
+
+            var products = await _context.Products.Include(p => p.ProductImages).Include(p => p.Manufacturer).Include(p => p.VehicleType).Include(p => p.Warehouses).ThenInclude(w => w.Branch).Where(p => p.Name.Contains(str)).ToListAsync();
+
+            DataViewList();
+            ViewBag.nameList = "Cars List";
+
+            return View(products);
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
