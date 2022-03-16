@@ -37,9 +37,9 @@
                 <span asp-validation-for="FullName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Avatar" class="control-label"></label>
-                <input asp-for="Avatar" class="form-control" />
-                <span asp-validation-for="Avatar" class="text-danger"></span>
+                <label asp-for="AvatarFile" class="control-label"></label>
+                <input asp-for="AvatarFile" class="form-control" />
+                <span class="text-danger">@ViewBag.msgFile</span>
             </div>
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
@@ -63,6 +63,7 @@
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
+                <span class="text-danger">@ViewBag.msgcheck</span>
             </div>
         </form>
     </div>

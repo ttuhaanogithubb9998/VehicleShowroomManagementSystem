@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +15,13 @@ namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
     [Area("Admin")]
     public class CustomersController : Controller
     {
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
         private readonly VehicleShowroomManagementSystemContext _context;
 
-        public CustomersController(VehicleShowroomManagementSystemContext context)
+        public CustomersController(VehicleShowroomManagementSystemContext context, IWebHostEnvironment webHostEnvironment)
         {
+            _webHostEnvironment = webHostEnvironment;
             _context = context;
         }
 
@@ -55,12 +60,46 @@ namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Account,Password,FullName,Address,PhoneNumber,Email,Avatar,Status")] Customer customer)
+        public async Task<IActionResult> Create([Bind("Id,Account,Password,FullName,Address,PhoneNumber,Email,Avatar,AvatarFile,Status")] Customer customer)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(customer);
-                await _context.SaveChangesAsync();
+                bool check = _context.Customers.Any(m => m.Account == customer.Account);
+                if (!check)
+                {
+                    _context.Add(customer);
+                    _context.SaveChanges();
+
+                    //upload file
+                    int id = _context.Customers.FirstOrDefault(m => m.Account == customer.Account).Id;
+                    if (customer.AvatarFile != null)
+                    {
+                        var fileName = id.ToString() + Path.GetExtension(customer.AvatarFile.FileName);
+                        var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "image","avatar","Customer");
+                        var filePath = Path.Combine(uploadPath, fileName);
+                        using (FileStream fs = System.IO.File.Create(filePath))
+                        {
+                            customer.AvatarFile.CopyTo(fs);
+                            fs.Flush();
+                            customer.Avatar = fileName;
+                            customer.Id = id;
+                        };
+                        _context.Update(customer);
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        _context.Remove(customer);
+                        await _context.SaveChangesAsync();
+                        ViewBag.msgFile = "File cannot be blank!";
+                        return View(customer);
+                    }
+                }
+                else
+                {
+                    ViewBag.msgCheck = "Account already exists!";
+                    return View(customer);
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(customer);
