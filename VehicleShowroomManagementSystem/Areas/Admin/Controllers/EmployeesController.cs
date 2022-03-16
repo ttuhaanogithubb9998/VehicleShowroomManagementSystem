@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -14,10 +16,14 @@ namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
     [Area("Admin")]
     public class EmployeesController : Controller
     {
+        
         private readonly VehicleShowroomManagementSystemContext _context;
 
-        public EmployeesController(VehicleShowroomManagementSystemContext context)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
+        public EmployeesController(VehicleShowroomManagementSystemContext context, IWebHostEnvironment webHostEnvironment)
         {
+            _webHostEnvironment = webHostEnvironment;
             _context = context;
         }
 
@@ -25,7 +31,9 @@ namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             var vehicleShowroomManagementSystemContext = _context.Employees.Include(e => e.Branch);
+
             return View(await vehicleShowroomManagementSystemContext.ToListAsync());
+
         }
 
         // GET: Admin/Employees/Details/5
@@ -59,15 +67,52 @@ namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Position,BranchId,Account,Password,FullName,Avatar,Email,Address,PhoneNumber,Status")] Employee employee)
+        public async Task<IActionResult> Create([Bind("Id,Position,BranchId,Account,Password,FullName,Avatar,AvatarFile,Email,Address,PhoneNumber,Status")] Employee employee)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(employee);
-                await _context.SaveChangesAsync();
+                //check Employees
+                bool check = _context.Employees.Any(e => e.Id == employee.Id || e.Account == employee.Account);
+                if (!check)
+                {
+                    _context.Add(employee);
+                    await _context.SaveChangesAsync();
+
+                    //upload file
+                    int id = _context.Employees.FirstOrDefault(m => m.Account == employee.Account).Id;
+                    if (employee.AvatarFile != null)
+                    {
+                        var fileName = id.ToString() + Path.GetExtension(employee.AvatarFile.FileName);
+                        var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "avatar", "avatarfile", "employee");
+                        var filePath = Path.Combine(uploadPath, fileName);
+                        using (FileStream fs = System.IO.File.Create(filePath))
+                        {
+                            employee.AvatarFile.CopyTo(fs);
+                            fs.Flush();
+                            employee.Avatar = fileName;
+                            employee.Id = id;
+                        };
+                        _context.Update(employee);
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        _context.Remove(employee);
+                        await _context.SaveChangesAsync();
+                        ViewBag.msgFile = "Image cannot be blank!";
+                        ViewData["BranchId"] = new SelectList(_context.Branches, "Id", "Address");
+                        return View(employee);
+                    }
+                }
+                else
+                {
+                    ViewBag.msgCheck = "Employee already exists!";
+                    ViewData["BranchId"] = new SelectList(_context.Branches, "Id", "Address");
+                    return View(employee);
+                }
+                ViewData["BranchId"] = new SelectList(_context.Branches, "Id", "Address");
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BranchId"] = new SelectList(_context.Branches, "Id", "Address", employee.BranchId);
             return View(employee);
         }
 
@@ -154,28 +199,8 @@ namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
         // POST: Admin/Emloyees/Login
-        public IActionResult Login()
-        {
-            return View();
-        }
+        
 
-        [HttpPost]
-
-        public IActionResult Login(string Account, string Password)
-        {
-            int count = _context.Employees.Count(a => a.Account == Account && a.Password == Password);
-            if (count > 0)
-            {
-                HttpContext.Session.SetString("Account", Account);
-
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
-                ViewBag.Msg = "Login failed! Try again!";
-                return View();
-            }
-        }
 
         private bool EmployeeExists(int id)
         {

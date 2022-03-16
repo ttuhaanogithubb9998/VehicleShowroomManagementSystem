@@ -42,7 +42,7 @@ namespace VehicleShowroomManagementSystem.Models
 
         [DisplayName("Ảnh đại diện")]
         [NotMapped]
-        public IFormFile AvartarFile { get; set; }
+        public IFormFile AvatarFile { get; set; }
 
         [DisplayName("Email")]
         [EmailAddress(ErrorMessage ="{0} không hợp lệ!")]
@@ -61,7 +61,5 @@ namespace VehicleShowroomManagementSystem.Models
         [DisplayName("Trạng thái")]
         [DefaultValue(true)]
         public bool Status { get; set; } = true;
-
-
     }
 }
