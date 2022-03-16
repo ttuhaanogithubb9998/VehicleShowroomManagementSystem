@@ -23,7 +23,7 @@ namespace VehicleShowroomManagementSystem.Controllers
             ViewBag.manufacturers = _context.Manufacturers.ToList();
             ViewBag.branches = _context.Branches.ToList();
             ViewBag.employee = _context.Employees.FirstOrDefault();
-            ViewBag.featuredVehicles = _context.Products.Include(p => p.InvoiceDetails).OrderByDescending(p => p.InvoiceDetails.Sum(i => i.Quantity)).FirstOrDefault();
+            ViewBag.featuredVehicles = _context.Products.Include(p=>p.ProductImages).Include(p => p.InvoiceDetails).OrderByDescending(p => p.InvoiceDetails.Sum(i => i.Quantity)).FirstOrDefault();
         }
 
         // GET: Products

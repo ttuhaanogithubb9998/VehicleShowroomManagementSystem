@@ -126,12 +126,12 @@
                     <div class="widget inventory-widget">
                         <div class="inv-widget-title mb-25">
                             <h5 class="title">Featured Vehicles</h5>
-                        </div>
+                        </div>      
                         <div class="sidebar-fv-active">
-                            <div class="sidebar-fv-item" data-background="img/images/sidebar_featured_vehicle01.jpg">
+                            <div class="sidebar-fv-item" data-background="/image/avatar/product/@featuredVehicles.ProductImages[0].Path" >
                                 <div class="fv-top-tag">
                                     <ul>
-                                        <li><a asp-controller="Products" asp-action="VehicleTypes" asp-route-id="@featuredVehicles.VehicleType.Id">@featuredVehicles.VehicleType.Name</a></li>
+                                        <li><a  asp-controller="Products" asp-action="VehicleTypes" asp-route-id="@featuredVehicles.VehicleType.Id">@featuredVehicles.VehicleType.Name</a></li>
                                         <li><a asp-controller="Products" asp-action="Manufacturers" asp-route-id="@featuredVehicles.Manufacturer.Id">@featuredVehicles.Manufacturer.Name</a></li>
                                     </ul>
                                 </div>
@@ -185,7 +185,7 @@
                     <h2 class="overlay-title">Browse cars</h2>
                     <span class="sub-title">categories cars</span>
                     <h2 class="title">Browse by Type cars</h2>
-                    <div class="line"><img src="https://themebeyond.com/html/carnation/carnation/img/images/title_line.png" alt=""></div>
+                    <div class="line"><img src="~/image/logo/web/title_line.png" alt=""></div>
                 </div>
             </div>
         </div>

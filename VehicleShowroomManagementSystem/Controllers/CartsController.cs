@@ -18,12 +18,7 @@ namespace VehicleShowroomManagementSystem.Controllers
         {
         }
 
-        // GET: Carts
-        public async Task<IActionResult> Index()
-        {
-            var vehicleShowroomManagementSystemContext = _context.Carts.Include(c => c.Customer).Include(c => c.Product);
-            return View(await vehicleShowroomManagementSystemContext.ToListAsync());
-        }
+        
 
 
         //add cart
@@ -287,27 +282,6 @@ namespace VehicleShowroomManagementSystem.Controllers
 
         }
 
-
-
-        // GET: Carts/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var cart = await _context.Carts
-                .Include(c => c.Customer)
-                .Include(c => c.Product)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (cart == null)
-            {
-                return NotFound();
-            }
-
-            return View(cart);
-        }
 
 
 

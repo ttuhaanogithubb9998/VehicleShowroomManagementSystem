@@ -26,7 +26,7 @@ $(document).ready(() => {
                     // quantity cart customer
                     $(
                         `<li id="quantiyCart" class="header-shop-cart">
-                            <a href = "Customers/Index">
+                            <a href = "/Customers/Index">
                                 <i class="fa fa-shopping-basket"></i><span>${data.quantityProduct}</span>
                             </a>
                         </li>`

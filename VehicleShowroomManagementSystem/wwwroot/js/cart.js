@@ -5,7 +5,18 @@ $(document).ready(() => {
     let addCart = $("#addCart");
     let minusQuantity = $('.minus-quantity')
     let plusQuantity = $('.plus-quantity')
+    let buy = $('#buy-product')
 
+    if (buy.length > 0) {
+        let customer = document.cookie.slice(9);
+        buy.click(e => {
+
+            if (customer.length <= 0) {
+                e.preventDefault();
+                $('#loginModal').modal('show');
+            }
+        })
+    }
 
 
 
@@ -80,7 +91,7 @@ $(document).ready(() => {
 
                         let liElement = $(e.target.parentElement.parentElement.children[1]).closest('.list-group-item').remove();
 
-                    } else { alert("error!")};
+                    } else { alert("error!") };
                 },
                 error: res => {
                     console.log(res)

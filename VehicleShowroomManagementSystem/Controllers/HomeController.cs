@@ -24,6 +24,8 @@ namespace VehicleShowroomManagementSystem.Controllers
             ViewBag.manufacturers = _context.Manufacturers.ToList();
             ViewBag.branches = _context.Branches.ToList();
             ViewBag.employee = _context.Employees.FirstOrDefault();
+
+
             ViewBag.featuredVehicles = _context.Products.Include(p => p.InvoiceDetails).OrderByDescending(p => p.InvoiceDetails.Sum(i => i.Quantity)).FirstOrDefault();
         }
 
@@ -33,7 +35,10 @@ namespace VehicleShowroomManagementSystem.Controllers
 
 
 
-            var carts = _context.Products.Include(p => p.ProductImages).ToList();
+            var carts = _context.Products.Include(p => p.ProductImages).Include(p=>p.InvoiceDetails).OrderByDescending(p=>p.InvoiceDetails.Sum(i=>i.Quantity)).ToList().Skip(0).Take(9);
+
+            //ViewBag.selling = _context.Manufacturers.Include(m => m.Products).ThenInclude(p => p.InvoiceDetails).OrderByDescending(m => m.Products.Sum(p => p.InvoiceDetails.Count)).ToList().Skip(0).Take(6);
+           
 
             ViewBag.employees = _context.Employees.ToList();
             ViewBag.manufacturers = _context.Manufacturers.ToList();

@@ -105,16 +105,16 @@
                                         if (styleHeader != "header-style-two inner-page-header")
                                         {
                                             <a href="/" class="sticky-logo-none">
-                                                <img src="https://themebeyond.com/html/carnation/carnation/img/logo/logo.png" alt="Logo" />
+                                                <img src="~/image/logo/web/logo.png" alt="Logo" />
                                             </a>
                                             <a href="/" class="sticky-logo-active">
-                                                <img src="https://themebeyond.com/html/carnation/carnation/img/logo/b_logo.png" alt="Logo" />
+                                                <img src="~/image/logo/web/b_logo.png" alt="Logo" />
                                             </a>
                                         }
                                         else
                                         {
                                             <a href="/" class="">
-                                                <img src="https://themebeyond.com/html/carnation/carnation/img/logo/b_logo.png" alt="Logo" />
+                                                <img src="~/image/logo/web/b_logo.png" alt="Logo" />
                                             </a>
                                         }
                                     }
@@ -145,7 +145,7 @@
                                                 @{
                                                     foreach (var item in vehicleTypes)
                                                     {
-                                                        <li><a asp-controller="Products" asp-action="VehicleTypes" asp-route-id="@item.Id">@item.Name</a></li>
+                                                        <li><a asp-controller="Products" asp-action="VehicleType" asp-route-id="@item.Id">@item.Name</a></li>
                                                     }
                                                 }
                                             </ul>
@@ -193,7 +193,7 @@
                             <nav class="menu-box">
                                 <div class="nav-logo">
                                     <a href="index.html">
-                                        <img src="https://themebeyond.com/html/carnation/carnation/img/logo/logo.png" alt="" title="" />
+                                        <img src="~/image/logo/web/logo.png" alt="" title="" />
                                     </a>
                                 </div>
                                 <div class="menu-outer">
@@ -231,7 +231,7 @@
                     <div class="container custom-container">
                         <form asp-controller="Home" asp-action="Search">
                             <div class="form-item">
-                                <input name="str" placeholder="Type here..." />
+                                <input required name="str" placeholder="Type here..." />
                                 <button type="submit"><i class="fa fa-search"></i></button>
                             </div>
                         </form>
@@ -249,7 +249,7 @@
             <div class="row align-items-center">
                 <div class="col-lg-4 col-md-6 order-2 order-md-0">
                     <div class="footer-logo">
-                        <a href="/"><img src="https://themebeyond.com/html/carnation/carnation/img/logo/w_logo.png" alt=""></a>
+                        <a href="/"><img src="~/image/logo/web/w_logo.png" alt=""></a>
                     </div>
                 </div>
                 <div class="col-lg-8 col-md-6">
@@ -270,7 +270,7 @@
         </div>
     </div>
     <!-- footer-brand-area-end -->
-    <footer class="footer-bg" data-background="https://themebeyond.com/html/carnation/carnation/img/bg/footer_bg.jpg">
+    <footer class="footer-bg" data-background="/image/logo/web/footer_bg.jpg">
         <div class="footer-top-area">
             <div class="container">
                 <div class="row">
@@ -394,7 +394,7 @@
                                     </p>
                                 </div>
                                 <div class="payment-card">
-                                    <img src="https://themebeyond.com/html/carnation/carnation/img/images/payment_card.png" alt="" />
+                                    <img src="~/image/logo/web/payment_card.png" alt="" />
                                 </div>
                             </div>
                         </div>
