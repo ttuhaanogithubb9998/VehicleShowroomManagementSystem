@@ -19,17 +19,28 @@ namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
         }
         public IActionResult Index()
         {
-
+            if(!CheckAdmin())
+            {
+                return RedirectToAction("Login");
+            }
             if (HttpContext.Session.GetString("Account") != null)
             {
                 ViewBag.FullName = HttpContext.Session.GetString("Account");
             }
-
             return View();
+            
         }
         public IActionResult Login()
         {
-            return View();
+            if(!CheckAdmin())
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index");
+                
+            }   
         }
 
         [HttpPost]
@@ -49,7 +60,14 @@ namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
                 ViewBag.Msg = "Login Failed! Try Again!";
                 return View();
             }
+        }
+        public bool CheckAdmin()
+        {
+            string admin = HttpContext.Session.GetString("Account");
 
+            bool check = _context.Employees.Any(e => e.Account == admin && e.Position == "Admin");
+
+            return check;
         }
     }
 }
