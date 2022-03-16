@@ -15,12 +15,15 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <link rel="shortcut icon" type="image/x-icon" href="https://themebeyond.com/html/carnation/carnation/img/favicon.png">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - VehicleShowroomManagementSystem</title>
+    <title>@ViewData["Title"]  Carnation</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-    @*<link rel="stylesheet" href="~/css/layout.css" />*@
+
+
 
     <link rel="stylesheet" href="~/css/animate.min.css">
     <link rel="stylesheet" href="~/css/magnific-popup.css">
@@ -35,7 +38,7 @@
     <link rel="stylesheet" href="~/css/default.css">
     <link rel="stylesheet" href="~/css/style.css">
     <link rel="stylesheet" href="~/css/responsive1.css">
-    @*<link rel="stylesheet" href="~/css/responsive.css" />*@
+
 
 </head>
 <body>
@@ -75,14 +78,12 @@
                                         }
                                         else
                                         {
-                                            <a data-toggle="modal" href="#loginModal"><i class="fa fa-user-circle"></i> LOGIN</a>
+                                            <a id="btn-login" data-toggle="modal" href="#loginModal"><i class="fa fa-user-circle"></i> LOGIN</a>
                                             <a data-toggle="modal" href="#registerModal">REGISTER</a>
                                             <partial name="LoginModal" />
                                             <partial name="RegisterModal" />
 
                                         }
-
-
 
                                     }
                                 </li>
@@ -104,16 +105,16 @@
                                         if (styleHeader != "header-style-two inner-page-header")
                                         {
                                             <a href="/" class="sticky-logo-none">
-                                                <img src="https://themebeyond.com/html/carnation/carnation/img/logo/logo.png" alt="Logo" />
+                                                <img src="~/image/logo/web/logo.png" alt="Logo" />
                                             </a>
                                             <a href="/" class="sticky-logo-active">
-                                                <img src="https://themebeyond.com/html/carnation/carnation/img/logo/b_logo.png" alt="Logo" />
+                                                <img src="~/image/logo/web/b_logo.png" alt="Logo" />
                                             </a>
                                         }
                                         else
                                         {
                                             <a href="/" class="">
-                                                <img src="https://themebeyond.com/html/carnation/carnation/img/logo/b_logo.png" alt="Logo" />
+                                                <img src="~/image/logo/web/b_logo.png" alt="Logo" />
                                             </a>
                                         }
                                     }
@@ -121,14 +122,14 @@
                                 </div>
                                 <div class="navbar-wrap main-menu d-none d-lg-flex">
                                     <ul class="navigation">
-                                        <li class="active dropdown">
+                                        <li class="">
                                             <a href="/">Home</a>
                                         </li>
-                                        <li class="dropdown">
+                                        <li class="">
                                             <a asp-controller="Products" asp-action="Allcars">Products</a>
                                         </li>
                                         <li class="dropdown">
-                                            <a href="">Manufacturers</a>
+                                            <a href=""  onclick="return false">Manufacturers</a>
                                             <ul class="submenu">
                                                 @{
                                                     foreach (var item in manufacturers)
@@ -139,12 +140,12 @@
                                             </ul>
                                         </li>
                                         <li class="dropdown">
-                                            <a href="">Vehicle Type</a>
+                                            <a href="" onclick="return false">Vehicle Type</a>
                                             <ul class="submenu">
                                                 @{
                                                     foreach (var item in vehicleTypes)
                                                     {
-                                                        <li><a asp-controller="Products" asp-action="VehicleTypes" asp-route-id="@item.Id">@item.Name</a></li>
+                                                        <li><a asp-controller="Products" asp-action="VehicleType" asp-route-id="@item.Id">@item.Name</a></li>
                                                     }
                                                 }
                                             </ul>
@@ -160,7 +161,7 @@
                                             if (customer != null)
                                             {
                                                 int quantityProduct = customer.Carts.Count();
-                                                <li class="header-shop-cart">
+                                                <li id="quantiyCart" class="header-shop-cart">
                                                     <a asp-controller="Customers" asp-action="index">
                                                         <i class="fa fa-shopping-basket"></i><span>@quantityProduct</span>
                                                     </a>
@@ -192,7 +193,7 @@
                             <nav class="menu-box">
                                 <div class="nav-logo">
                                     <a href="index.html">
-                                        <img src="https://themebeyond.com/html/carnation/carnation/img/logo/logo.png" alt="" title="" />
+                                        <img src="~/image/logo/web/logo.png" alt="" title="" />
                                     </a>
                                 </div>
                                 <div class="menu-outer">
@@ -230,7 +231,7 @@
                     <div class="container custom-container">
                         <form asp-controller="Home" asp-action="Search">
                             <div class="form-item">
-                                <input name="search" placeholder="Type here..." />
+                                <input required name="str" placeholder="Type here..." />
                                 <button type="submit"><i class="fa fa-search"></i></button>
                             </div>
                         </form>
@@ -248,7 +249,7 @@
             <div class="row align-items-center">
                 <div class="col-lg-4 col-md-6 order-2 order-md-0">
                     <div class="footer-logo">
-                        <a href="/"><img src="https://themebeyond.com/html/carnation/carnation/img/logo/w_logo.png" alt=""></a>
+                        <a href="/"><img src="~/image/logo/web/w_logo.png" alt=""></a>
                     </div>
                 </div>
                 <div class="col-lg-8 col-md-6">
@@ -269,7 +270,7 @@
         </div>
     </div>
     <!-- footer-brand-area-end -->
-    <footer class="footer-bg" data-background="https://themebeyond.com/html/carnation/carnation/img/bg/footer_bg.jpg">
+    <footer class="footer-bg" data-background="/image/logo/web/footer_bg.jpg">
         <div class="footer-top-area">
             <div class="container">
                 <div class="row">
@@ -393,7 +394,7 @@
                                     </p>
                                 </div>
                                 <div class="payment-card">
-                                    <img src="https://themebeyond.com/html/carnation/carnation/img/images/payment_card.png" alt="" />
+                                    <img src="~/image/logo/web/payment_card.png" alt="" />
                                 </div>
                             </div>
                         </div>
@@ -422,13 +423,19 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.js"></script>
-    @*<script src="~/js/layout.js"></script>*@
+
+
+    @* main *@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/login.js"></script>
+    <script src="~/js/order.js"></script>
+    <script src="~/js/cart.js"></script>
     <script src="~/js/register.js"></script>
+    <script src="~/js/edit-account.js"></script>
 
+
+    @* template *@
     <script src="~/js/popper.min.js"></script>
-    <script src="~/js/bootstrap.min.js"></script>
     <script src="~/js/isotope.pkgd.min.js"></script>
     <script src="~/js/imagesloaded.pkgd.min.js"></script>
     <script src="~/js/jquery.magnific-popup.min.js"></script>

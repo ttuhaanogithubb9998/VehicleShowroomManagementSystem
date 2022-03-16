@@ -13,7 +13,7 @@ namespace VehicleShowroomManagementSystem.Controllers
     public class ProductsController : CheckCookiesController
     {
 
-        public ProductsController(VehicleShowroomManagementSystemContext context):base(context)
+        public ProductsController(VehicleShowroomManagementSystemContext context) : base(context)
         {
         }
 
@@ -23,7 +23,7 @@ namespace VehicleShowroomManagementSystem.Controllers
             ViewBag.manufacturers = _context.Manufacturers.ToList();
             ViewBag.branches = _context.Branches.ToList();
             ViewBag.employee = _context.Employees.FirstOrDefault();
-            ViewBag.featuredVehicles = _context.Products.Include(p => p.InvoiceDetails).OrderByDescending(p => p.InvoiceDetails.Sum(i => i.Quantity)).FirstOrDefault();
+            ViewBag.featuredVehicles = _context.Products.Include(p=>p.ProductImages).Include(p => p.InvoiceDetails).OrderByDescending(p => p.InvoiceDetails.Sum(i => i.Quantity)).FirstOrDefault();
         }
 
         // GET: Products
@@ -32,10 +32,11 @@ namespace VehicleShowroomManagementSystem.Controllers
             var vehicleShowroomManagementSystemContext = _context.Products.Include(p => p.Manufacturer).Include(p => p.VehicleType);
             return View(await vehicleShowroomManagementSystemContext.ToListAsync());
         }
-        
+
         public async Task<IActionResult> AllCars()
         {
-            var cars = await _context.Products.Include(p=>p.ProductImages).Include(p=>p.Manufacturer).Include(p=>p.VehicleType).Include(p=>p.Warehouses).ThenInclude(w=>w.Branch).Where(p=>p.Warehouses.Sum(w=>w.Stock)>0).ToListAsync();
+            Ch_Cookie();
+            var cars = await _context.Products.Include(p => p.ProductImages).Include(p => p.Manufacturer).Include(p => p.VehicleType).Include(p => p.Warehouses).ThenInclude(w => w.Branch).Where(p => p.Warehouses.Sum(w => w.Stock) > 0).ToListAsync();
 
             DataViewList();
             ViewBag.nameList = "All Cars";
@@ -46,8 +47,10 @@ namespace VehicleShowroomManagementSystem.Controllers
 
 
         //Get Products/Search/
-        public async Task<IActionResult> Search (int ManufacturerId,int VehicleTypeId)
+        public async Task<IActionResult> Search(int ManufacturerId, int VehicleTypeId)
         {
+            Ch_Cookie();
+
             var products = await _context.Products.Include(p => p.ProductImages).Include(p => p.Manufacturer).Include(p => p.VehicleType).Include(p => p.Warehouses).ThenInclude(w => w.Branch).Where(p => p.Manufacturer.Id == ManufacturerId && p.VehicleType.Id == VehicleTypeId).ToListAsync();
 
             DataViewList();
@@ -58,15 +61,16 @@ namespace VehicleShowroomManagementSystem.Controllers
         }
 
         //Get Products/Filter/
-        public async Task<IActionResult> Filter (int BranchId, int VehicleTypeId,int PriceId,int ManufacturerId)
+        public async Task<IActionResult> Filter(int BranchId, int VehicleTypeId, int PriceId, int ManufacturerId)
         {
+            Ch_Cookie();
 
 
 
-            var products = _context.Products.Include(p => p.ProductImages).Include(p => p.Manufacturer).Include(p => p.VehicleType).Include(p => p.Warehouses).ThenInclude(w => w.Branch).Where(p => p.Manufacturer.Id == ManufacturerId && p.VehicleType.Id == VehicleTypeId && p.Warehouses.Where(w => w.Branch.Id == BranchId).Any(w=>w.Stock>0));
+            var products = _context.Products.Include(p => p.ProductImages).Include(p => p.Manufacturer).Include(p => p.VehicleType).Include(p => p.Warehouses).ThenInclude(w => w.Branch).Where(p => p.Manufacturer.Id == ManufacturerId && p.VehicleType.Id == VehicleTypeId && p.Warehouses.Where(w => w.Branch.Id == BranchId).Any(w => w.Stock > 0));
 
 
-            List<Product> _products =new List<Product>();
+            List<Product> _products = new List<Product>();
 
             switch (PriceId)
             {
@@ -100,14 +104,16 @@ namespace VehicleShowroomManagementSystem.Controllers
 
         //get Products/VehicleTypes
 
-        public async Task<IActionResult> VehicleTypes (int Id)
+        public async Task<IActionResult> VehicleType(int Id)
         {
-            if(Id == 0)
+            Ch_Cookie();
+
+            if (Id == 0)
             {
-                return RedirectToAction("AllCars", "Products"); 
+                return RedirectToAction("AllCars", "Products");
             }
 
-            var products = await  _context.Products.Include(p => p.ProductImages).Include(p => p.Manufacturer).Include(p => p.VehicleType).Include(p => p.Warehouses).ThenInclude(w => w.Branch).Where(p => p.VehicleTypeId == Id).ToListAsync();
+            var products = await _context.Products.Include(p => p.ProductImages).Include(p => p.Manufacturer).Include(p => p.VehicleType).Include(p => p.Warehouses).ThenInclude(w => w.Branch).Where(p => p.VehicleTypeId == Id).ToListAsync();
 
             DataViewList();
             ViewBag.nameList = "Cars List";
@@ -119,12 +125,14 @@ namespace VehicleShowroomManagementSystem.Controllers
 
         public async Task<IActionResult> Manufacturer(int Id)
         {
-            if(Id == 0)
+            Ch_Cookie();
+
+            if (Id == 0)
             {
-                return RedirectToAction("AllCars", "Products"); 
+                return RedirectToAction("AllCars", "Products");
             }
 
-            var products = await  _context.Products.Include(p => p.ProductImages).Include(p => p.Manufacturer).Include(p => p.VehicleType).Include(p => p.Warehouses).ThenInclude(w => w.Branch).Where(p => p.ManufacturerId == Id).ToListAsync();
+            var products = await _context.Products.Include(p => p.ProductImages).Include(p => p.Manufacturer).Include(p => p.VehicleType).Include(p => p.Warehouses).ThenInclude(w => w.Branch).Where(p => p.ManufacturerId == Id).ToListAsync();
 
             DataViewList();
             ViewBag.nameList = "Cars List";
@@ -144,7 +152,7 @@ namespace VehicleShowroomManagementSystem.Controllers
 
             var product = await _context.Products
                 .Include(p => p.Manufacturer)
-                .Include(p => p.VehicleType).Include(p=>p.ProductImages).Include(p=>p.Warehouses)
+                .Include(p => p.VehicleType).Include(p => p.ProductImages).Include(p => p.Warehouses)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (product == null)
             {
@@ -154,117 +162,81 @@ namespace VehicleShowroomManagementSystem.Controllers
             return View(product);
         }
 
-        // GET: Products/Create
-        public IActionResult Create()
+
+        public async Task<IActionResult> Order(int? Id)
         {
-            ViewData["ManufacturerId"] = new SelectList(_context.Manufacturers, "Id", "Name");
-            ViewData["VehicleTypeId"] = new SelectList(_context.VehicleTypes, "Id", "Name");
-            return View();
+            Ch_Cookie();
+
+            if (Id == null)
+            {
+                return RedirectToAction("index", "Home");
+            }
+
+            var product = await _context.Products.Include(p => p.ProductImages).Where(p => p.Id == Id).FirstOrDefaultAsync();
+
+            return View(product);
         }
 
-        // POST: Products/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,VehicleTypeId,ManufacturerId,SerialNumber,Price,Description,Status")] Product product)
+        public async Task<IActionResult> Pay(int productId, string ShippingAddress, string ShippingPhone)
         {
-            if (ModelState.IsValid)
+            Customer customer = Ch_Cookie();
+
+            var product = _context.Products.Include(p => p.Warehouses).FirstOrDefault(p => p.Id == productId);
+
+            // check inventory
+            if (product.Warehouses.Sum(w => w.Stock) > 0)
             {
-                _context.Add(product);
+                var wh = product.Warehouses.OrderByDescending(w => w.Stock).FirstOrDefault() ;
+                wh.Stock--;
+                _context.Update(wh);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                // create invoice
+                Invoice invoice = new Invoice();
+                DateTime timmeNow = DateTime.Now;
+
+                invoice.ShippingAddress = ShippingAddress;
+                invoice.ShippingPhone = ShippingPhone;
+                invoice.ContractNumber = ((customer.Account + timmeNow).GetHashCode()*-1).ToString();
+                invoice.CustomerId = customer.Id;
+                invoice.Date = timmeNow;
+
+                _context.Add(invoice);
+                _context.SaveChanges();
+
+                int invoiceId = _context.Invoices.FirstOrDefault(i => i.ContractNumber == invoice.ContractNumber).Id;
+                invoice.Id = invoiceId;
+
+                //create invoice details for each product
+
+                InvoiceDetail invoiceDetail = new InvoiceDetail();
+                invoiceDetail.ProductId = product.Id;
+                invoiceDetail.InvoiceId = invoiceId;
+                invoiceDetail.Quantity = 1;
+                invoiceDetail.UnitPrice = product.Price;
+
+                invoice.TotalPrice = invoiceDetail.UnitPrice;
+
+                _context.Add(invoiceDetail);
+                _context.Update(invoice);
+
+                await _context.SaveChangesAsync();
+
             }
-            ViewData["ManufacturerId"] = new SelectList(_context.Manufacturers, "Id", "Name", product.ManufacturerId);
-            ViewData["VehicleTypeId"] = new SelectList(_context.VehicleTypes, "Id", "Name", product.VehicleTypeId);
-            return View(product);
+            else
+            {
+                ViewBag.msg = "Some products in stock are not enough or out of stock!";
+                return View();
+            }
+
+
+
+
+            return RedirectToAction("Invoices", "Customers");
         }
 
-        // GET: Products/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var product = await _context.Products.FindAsync(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            ViewData["ManufacturerId"] = new SelectList(_context.Manufacturers, "Id", "Name", product.ManufacturerId);
-            ViewData["VehicleTypeId"] = new SelectList(_context.VehicleTypes, "Id", "Name", product.VehicleTypeId);
-            return View(product);
-        }
-
-        // POST: Products/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,VehicleTypeId,ManufacturerId,SerialNumber,Price,Description,Status")] Product product)
-        {
-            if (id != product.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(product);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductExists(product.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ManufacturerId"] = new SelectList(_context.Manufacturers, "Id", "Name", product.ManufacturerId);
-            ViewData["VehicleTypeId"] = new SelectList(_context.VehicleTypes, "Id", "Name", product.VehicleTypeId);
-            return View(product);
-        }
-
-        // GET: Products/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var product = await _context.Products
-                .Include(p => p.Manufacturer)
-                .Include(p => p.VehicleType)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            return View(product);
-        }
-
-        // POST: Products/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var product = await _context.Products.FindAsync(id);
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
 
         private bool ProductExists(int id)
         {
