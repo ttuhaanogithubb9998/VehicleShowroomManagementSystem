@@ -151,8 +151,7 @@
                             <div class="latest-car-item mb-60">
                                 <div class="latest-car-thumb mb-25">
                                     <a asp-controller="Products" asp-action="Details" asp-route-id="@item.Id">
-                                        @*<img src="~/image/avatar/@item.ProductImages[0]" alt="">*@
-                                        <img src="https://themebeyond.com/html/carnation/carnation/img/images/released_cars_thumb01.jpg" alt="">
+                                        <img src="~/image/product/@item.ProductImages[0].Path" alt="">
                                     </a>
                                 </div>
                                 <div class="latest-car-content">

@@ -22,17 +22,29 @@
         <div class="row justify-content-center">
             <div class="col-xl-8 col-lg-7 col-md-9">
                 @{
-                    if (Model.Count()<1) { 
-                                <h6 class="text-center text-danger">Out of stock</h6>
+                    if (Model.Count() < 1)
+                    {
+                        <h6 class="text-center text-danger">Out of stock</h6>
                     }
 
                     foreach (var item in Model)
                     {
+
+
                         <div class="inventory-list-item">
                             <a asp-controller="Products" asp-action="Details" asp-route-id="@item.Id">
                                 <div class="inventory-list-thumb">
-                                    @*<img src="~/image/avatar/product/@item.ProductImages[0]" alt="">*@
-                                    <img src="https://themebeyond.com/html/carnation/carnation/img/images/inventory_list_img05.jpg" alt="">
+                                    @{
+                                        if (item.ProductImages.Count() > 0)
+                                        {
+                                            <img src="~/image/product/@item.ProductImages[0].Path" alt="">
+                                        }
+                                        else
+                                        {
+                                            <img src="" alt="">
+
+                                        }
+                                    }
                                 </div>
                             </a>
                             <div class="inventory-list-content">
@@ -47,7 +59,7 @@
                                 </div>
                                 <h4><a asp-controller="Products" asp-action="Details" asp-route-id="@item.Id">@item.Name</a></h4>
                                 <p class="location">
-                                    Branch: 
+                                    Branch:
                                     @{
                                         foreach (var branch in item.Warehouses)
                                         {
@@ -126,12 +138,12 @@
                     <div class="widget inventory-widget">
                         <div class="inv-widget-title mb-25">
                             <h5 class="title">Featured Vehicles</h5>
-                        </div>      
+                        </div>
                         <div class="sidebar-fv-active">
-                            <div class="sidebar-fv-item" data-background="/image/avatar/product/@featuredVehicles.ProductImages[0].Path" >
+                            <div class="sidebar-fv-item" data-background="/image/product/@featuredVehicles.ProductImages[0].Path">
                                 <div class="fv-top-tag">
                                     <ul>
-                                        <li><a  asp-controller="Products" asp-action="VehicleTypes" asp-route-id="@featuredVehicles.VehicleType.Id">@featuredVehicles.VehicleType.Name</a></li>
+                                        <li><a asp-controller="Products" asp-action="VehicleTypes" asp-route-id="@featuredVehicles.VehicleType.Id">@featuredVehicles.VehicleType.Name</a></li>
                                         <li><a asp-controller="Products" asp-action="Manufacturers" asp-route-id="@featuredVehicles.Manufacturer.Id">@featuredVehicles.Manufacturer.Name</a></li>
                                     </ul>
                                 </div>
