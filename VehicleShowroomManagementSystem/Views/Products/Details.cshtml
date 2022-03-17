@@ -85,7 +85,7 @@
                         if (@Model.Warehouses.Sum(w => w.Stock) > 0)
                         {
                             <a id="buy-product" asp-controller="Products" asp-action="Order" asp-route-id="@Model.Id" class="btn btn-success" style="margin-right: 30px; color: #ee4d2d; background: #fbc6b42e; border: #ee4d2d solid 1px"> Buy</a>
-                            <button id="addCart" dataid="@Model.Id" class="btn btn-info float-right"><i style="color:white" class="fa fa-cart-plus"></i></button>
+                            <button id="addCart" dataid="@Model.Id" class="btn btn-info float-right addCart"><i style="color:white" class="fa fa-cart-plus"></i></button>
                         }
                         else
                         {

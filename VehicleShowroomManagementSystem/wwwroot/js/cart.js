@@ -23,7 +23,13 @@ $(document).ready(() => {
     if (addCart.length > 0) {
 
         addCart.click((e) => {
-            let Id = e.target.attributes.dataid.value;
+            let element;
+            if (e.target.childElementCount == 0) {
+                element = e.target.parentElement
+            } else {
+                element = e.target
+            }
+            let Id = element.attributes.dataid.value;
             let Customer = document.cookie.slice(9);
 
             if (Customer.length > 0) {
@@ -40,6 +46,28 @@ $(document).ready(() => {
                         console.log(res)
                     }
                 });
+
+
+                let listBtn = element.parentElement;
+                listBtn.style.position = "relative";
+                if (!$(listBtn).children()[2]) {
+                    $(listBtn).append($(listBtn).children()[1].outerHTML);
+                    console.log();
+
+                    let style = listBtn.querySelectorAll("button")[1].style;
+                    style.position = "absolute";
+                    style.bottom = "0";
+                    style.right = "0";
+                    style.transition = "0.3s";
+                    setTimeout(function () {
+                        style.opacity = "0";
+                        style.transform = "translate(40px,-50px) scale(0.5,0.5)";
+
+                        setTimeout(function () {
+                            listBtn.querySelectorAll("button")[1].remove();
+                        }, 300);
+                    }, 0);
+                }
 
             } else {
                 $('#loginModal').modal('show');
