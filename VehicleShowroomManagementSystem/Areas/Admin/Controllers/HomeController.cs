@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,16 +26,6 @@ namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
             }
             return View();
             
-        }
-        private void DataViewList()
-        {
-            ViewBag.vehicleTypes = _context.VehicleTypes.ToList();
-            ViewBag.manufacturers = _context.Manufacturers.ToList();
-            ViewBag.branches = _context.Branches.ToList();
-            ViewBag.employee = _context.Employees.FirstOrDefault();
-
-
-            ViewBag.featuredVehicles = _context.Products.Include(p => p.ProductImages).Include(p => p.InvoiceDetails).OrderByDescending(p => p.InvoiceDetails.Sum(i => i.Quantity)).FirstOrDefault();
         }
         public IActionResult Login()
         {
@@ -77,23 +66,5 @@ namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
             ViewBag.employee = employee;
             return employee;
         }
-        public IActionResult Logout()
-        {
-
-            HttpContext.Session.Remove("Account");
-
-            return RedirectToAction("Login");
-        }
-        public async Task<IActionResult> Search(string find)
-        {
-            CheckAdmin();
-            var str = await _context.Products.Include(s => s.ProductImages).Include(s => s.VehicleType).Include(s => s.Manufacturer).Include(s => s.Carts).Include(s => s.InvoiceDetails).ThenInclude(s => s.Invoice).Where(s => s.Name.Contains(find) || s.Description.Contains(find)).ToListAsync();
-
-            DataViewList();
-            ViewBag.nameList = "Cars List";
-
-            
-            return View(str);
-        } 
     }
 }
