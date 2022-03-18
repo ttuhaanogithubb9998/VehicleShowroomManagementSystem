@@ -83,7 +83,7 @@ namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
                     if (employee.AvatarFile != null)
                     {
                         var fileName = id.ToString() + Path.GetExtension(employee.AvatarFile.FileName);
-                        var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "avatar", "avatarfile", "employee");
+                        var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "image", "avatar", "employee");
                         var filePath = Path.Combine(uploadPath, fileName);
                         using (FileStream fs = System.IO.File.Create(filePath))
                         {

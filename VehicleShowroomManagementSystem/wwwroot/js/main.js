@@ -239,8 +239,8 @@ $('.team-active').slick({
 	speed: 1000,
 	autoplay: false,
 	arrows: true,
-	prevArrow: '<button type="button" class="slick-prev"><img src="img/icon/left-arrow.png" alt=""></button>',
-	nextArrow: '<button type="button" class="slick-next"><img src="img/icon/right-arrow.png" alt=""></button>',
+	prevArrow: '<button type="button" class="slick-prev"><img src="image/logo/web/left-arrow.png" alt=""></button>',
+	nextArrow: '<button type="button" class="slick-next"><img src="image/logo/web/right-arrow.png" alt=""></button>',
 	slidesToShow: 4,
 	slidesToScroll: 1,
 	responsive: [

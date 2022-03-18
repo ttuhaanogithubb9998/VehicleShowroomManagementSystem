@@ -25,14 +25,13 @@ $(document).ready(() => {
 
                     // quantity cart customer
                     $(
-                        `<li class="header-shop-cart">
-                            <a href = "Customers/Index">
+                        `<li id="quantiyCart" class="header-shop-cart">
+                            <a href = "/Customers/Index">
                                 <i class="fa fa-shopping-basket"></i><span>${data.quantityProduct}</span>
                             </a>
                         </li>`
                     ).insertBefore('#getaquocte');
 
-                    $('body').css("padding",'0')
 
 
 
@@ -40,6 +39,7 @@ $(document).ready(() => {
                     $('#loginModal').modal('hide');
                     $('.modal-backdrop').remove();
                     $("[data-dismiss=modal]").trigger({ type: "click" });
+                    $('body').css("padding", '0')
                     $('body').removeClass('modal-open');
                 }
                 else {

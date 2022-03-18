@@ -22,18 +22,36 @@
         <div class="row justify-content-center">
             <div class="col-xl-8 col-lg-7 col-md-9">
                 @{
+                    if (Model.Count() < 1)
+                    {
+                        <h6 class="text-center text-danger">Out of stock</h6>
+                    }
+
                     foreach (var item in Model)
                     {
+
+
                         <div class="inventory-list-item">
-                            <div class="inventory-list-thumb">
-                                @*<img src="~/image/avatar/product/@item.ProductImages[0]" alt="">*@
-                                <img src="https://themebeyond.com/html/carnation/carnation/img/images/inventory_list_img05.jpg" alt="">
-                            </div>
+                            <a asp-controller="Products" asp-action="Details" asp-route-id="@item.Id">
+                                <div class="inventory-list-thumb">
+                                    @{
+                                        if (item.ProductImages.Count() > 0)
+                                        {
+                                            <img src="~/image/product/@item.ProductImages[0].Path" alt="">
+                                        }
+                                        else
+                                        {
+                                            <img src="" alt="">
+
+                                        }
+                                    }
+                                </div>
+                            </a>
                             <div class="inventory-list-content">
                                 <div class="inv-content-top">
                                     <ul>
                                         <li class="option">
-                                            <a asp-controller="Products" asp-action="Manafacturer" asp-route-id="@item.Manufacturer.Id">@item.Manufacturer.Name</a>
+                                            <a asp-controller="Products" asp-action="Manufacturer" asp-route-id="@item.Manufacturer.Id">@item.Manufacturer.Name</a>
                                             <a asp-controller="Products" asp-action="VehicleType" asp-route-id="@item.VehicleType.Id">@item.VehicleType.Name</a>
                                         </li>
                                         <li class="price">$@item.Price</li>
@@ -45,7 +63,10 @@
                                     @{
                                         foreach (var branch in item.Warehouses)
                                         {
-                                            <span>@branch.Branch.Name, </span>
+                                            if (branch.Stock > 0)
+                                            {
+                                                <span>@branch.Branch.Name, </span>
+                                            }
                                         }
                                     }
                                 </p>
@@ -69,7 +90,7 @@
                         <form asp-controller="Products" asp-action="Filter" class="sidebar-find-car">
                             <div class="form-grp">
                                 <i class="fa fa-map-marker"></i>
-                                <select name="Branch" class="selected">
+                                <select name="BranchId" class="selected">
                                     @{
                                         foreach (var item in branches)
                                         {
@@ -81,7 +102,7 @@
 
                             <div class="form-grp">
                                 <i class="fa fa-car"></i>
-                                <select name="VehicleType" class="selected">
+                                <select name="VehicleTypeId" class="selected">
                                     @{
                                         foreach (var item in vehicleTypes)
                                         {
@@ -92,7 +113,7 @@
                             </div>
                             <div class="form-grp">
                                 <i class="fa fa-diamond"></i>
-                                <select name="VehicleType" class="selected">
+                                <select name="ManufacturerId" class="selected">
                                     @{
                                         foreach (var item in manufacturers)
                                         {
@@ -119,7 +140,7 @@
                             <h5 class="title">Featured Vehicles</h5>
                         </div>
                         <div class="sidebar-fv-active">
-                            <div class="sidebar-fv-item" data-background="img/images/sidebar_featured_vehicle01.jpg">
+                            <div class="sidebar-fv-item" data-background="/image/product/@featuredVehicles.ProductImages[0].Path">
                                 <div class="fv-top-tag">
                                     <ul>
                                         <li><a asp-controller="Products" asp-action="VehicleTypes" asp-route-id="@featuredVehicles.VehicleType.Id">@featuredVehicles.VehicleType.Name</a></li>
@@ -142,7 +163,7 @@
                                 if (employee != null)
                                 {
                                     <div class="advisor-thumb">
-                                        <img src="~/image/avatar/employee/@employee.AvatarFile" alt="">
+                                        <img src="~/image/avatar/employee/@employee.Avatar" alt="">
                                     </div>
                                     <div class="advisor-info">
                                         <h5>@employee.FullName</h5>
@@ -176,7 +197,7 @@
                     <h2 class="overlay-title">Browse cars</h2>
                     <span class="sub-title">categories cars</span>
                     <h2 class="title">Browse by Type cars</h2>
-                    <div class="line"><img src="https://themebeyond.com/html/carnation/carnation/img/images/title_line.png" alt=""></div>
+                    <div class="line"><img src="~/image/logo/web/title_line.png" alt=""></div>
                 </div>
             </div>
         </div>
@@ -186,7 +207,7 @@
                 {
                     <div class="col">
                         <div class="car-cat-item">
-                            <a asp-controller="Products" asp-action="VehicleTypes" asp-route-id="@item.Id">
+                            <a asp-controller="Products" asp-action="VehicleType" asp-route-id="@item.Id">
                                 <img src="~/image/logo/vehicletype/@item.Image" alt="">
                                 <span>@item.Name</span>
                             </a>

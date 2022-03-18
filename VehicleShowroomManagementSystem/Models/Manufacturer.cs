@@ -28,5 +28,8 @@ namespace VehicleShowroomManagementSystem.Models
         [DisplayName("Trạng thái")]
         [DefaultValue(true)]
         public bool Status { get; set; } = true;
+
+        public List<Product> Products { get; set; }
+
     }
 }
