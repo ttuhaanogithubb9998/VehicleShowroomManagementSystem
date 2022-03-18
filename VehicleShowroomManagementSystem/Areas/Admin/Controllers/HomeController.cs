@@ -69,5 +69,12 @@ namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
 
             return check;
         }
+        public IActionResult Logout()
+        {
+
+            HttpContext.Session.Remove("Account");
+
+            return RedirectToAction("Login");
+        }
     }
 }
