@@ -79,7 +79,7 @@ $(document).ready(() => {
 
     if (minusQuantity.length > 0) {
         minusQuantity.click((e) => {
-
+            console.log(e.target)
             let cartId = e.target.parentElement.parentElement.children[1].attributes.dataid.value;
 
             $.ajax({
