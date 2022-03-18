@@ -1,15 +1,21 @@
+var loadFile = (e) => {
+
+    let outputImg = document.getElementById('outputImg');
+
+    outputImg.src = URL.createObjectURL(e.target.files[0]);
+
+    outputImg.onload = () => {
+        URL.revokeObjectURL(outputImg.src);
+    }
+}
 
 $(document).ready(function () {
 
-    let inputImg = $('#AvatarFile');
+    let inputImg = $('#registration #AvatarFile');
+    inputImg.change(loadFile)
 
-    function loadFile(e) {
-        let outputImg = document.getElementById('outputImg');
-        outputImg.src = URl.createObjectURL(e.target.files[0]);
-        outputImg.onload = ()=>{
-            URL.revokeObjectURL(outputImg.src);
-        }
-    }
+
+
 
     $.validator.addMethod('phone', function (value, element) {
 
@@ -48,49 +54,16 @@ $(document).ready(function () {
                     required: true,
                     email: true
                 },
-                avatar: "required",
+                AvatarFile: "required",
 
 
             },
 
-            //messages: {
-            //    firstname: "Please enter your firstname",
-            //    lastname: "Please enter your lastname",
-            //    password: {
-            //        required: "Please provide a password",
-            //        minlength: "Your password must be at least 5 characters long"
-            //    },
-            //    password_confirmation: {
-            //        required: "Please provide a password",
-            //        minlength: "Your password must be at least 5 characters long"
-            //    },
-            //    email: "Please enter a valid email address"
-            //},
-
             submitHandler: function (form) {
-
-                //function getFormData(form) {
-                //    var unindexed_array = form.serializeArray();
-                //    var indexed_array = {};
-
-                //    $.map(unindexed_array, function (n, i) {
-                //        indexed_array[n['name']] = n['value'];
-                //    });
-
-                //    return indexed_array;
-                //}
-                //var data = getFormData($("#registration"));
 
                 let mf = document.getElementById("registration");
 
                 let dt = new FormData(mf);
-
-                //dt.append("Account", $('#registration #Account').val())
-                //dt.append("Password", $('#registration #Password').val())
-                //dt.append("FullName", $('#registration #FullName').val())
-                //dt.append("PhoneNumber", $('#registration #PhoneNumber').val())
-                //dt.append("Email", $('#registration #Email').val())
-                //dt.append("AvatarFile", $('#registration #AvatarFile').val())
 
                 $.ajax({
                     url: "/Customers/Register",
@@ -99,15 +72,38 @@ $(document).ready(function () {
                     processData: false,
                     contentType: false,
                     success: function (data) {
-                        console.log(data);
-                        $('li.header-top-login').html(
-                            `<a style="display:block" href="/Customers/Index">
-                            <img src="/image/avatar/customer/${data.customer.Avatar}" style="height:14px;margin:0 5px" />
-                            ${data.customer.FullName}
-                         </a>`
-                        );
 
-                        $('#registerModal form').html(`<p class="text-success text-center">${data.msg}</p>`)
+                        console.log(data)
+                        if (data.code == 200) {
+
+                            alert(data.msg)
+
+                            $('li.header-top-login').html(
+                                `<a style="display:block" href="/Customers/Index">
+                            <img src="/image/avatar/customer/${data.customer.avatar}" style="height:14px;margin:0 5px" />
+                            ${data.customer.fullName}
+                         </a>`
+                            );
+
+                            // quantity cart customer
+                            $(
+                                `<li id="quantiyCart" class="header-shop-cart">
+                                <a href = "Customers/Index">
+                                    <i class="fa fa-shopping-basket"></i><span>0</span>
+                                </a>
+                            </li>`
+                            ).insertBefore('#getaquocte');
+
+
+
+                            $('.modal-backdrop').remove();
+                            $("[data-dismiss=modal]").trigger({ type: "click" });
+                            $('body').css("padding", '0')
+                            $('body').removeClass('modal-open');
+
+                        } else {
+                            $('.text-msg').html(data.msg)
+                        }
 
                     },
                     error: function (res) {
@@ -115,25 +111,6 @@ $(document).ready(function () {
                     }
                 })
 
-
-                //$.ajax({
-                //    url: "/Customers/Register",
-                //    type: "post",
-                //    data: dt,
-                //    success: (data => {
-                //        cconsole.log(data);
-                //    }),
-                //    error: (res => console.log(res))
-
-                //})
-
-
-                //for (var pair of dt.entries()) {
-                //    console.dir(pair[0] + ', ' + pair[1]);
-                //}
-
-                //console.log(mf)
-                //console.log('dt', dt);
 
 
 

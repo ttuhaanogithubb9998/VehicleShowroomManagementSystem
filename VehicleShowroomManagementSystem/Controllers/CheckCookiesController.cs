@@ -22,10 +22,11 @@ namespace VehicleShowroomManagementSystem.Controllers
         public Customer Ch_Cookie()
         {
             string account  = HttpContext.Request.Cookies["Customer"];
-            var customer = _context.Customers.Include(c=>c.Carts).ThenInclude(c=>c.Product).ThenInclude(p=>p.ProductImages).FirstOrDefault(c => c.Account == account);
+            var customer = _context.Customers.Include(c=>c.Carts).ThenInclude(c=>c.Product).ThenInclude(p=>p.ProductImages).Include(p=>p.Carts).ThenInclude(c=>c.Product).ThenInclude(p=>p.Warehouses).FirstOrDefault(c => c.Account == account);
 
             ViewBag.customer = customer;
 
+            // data view
             ViewBag.manufacturers = _context.Manufacturers.ToList();
             ViewBag.vehicleTypes = _context.VehicleTypes.ToList();
 

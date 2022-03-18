@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using VehicleShowroomManagementSystem.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 
 namespace VehicleShowroomManagementSystem
 {
@@ -38,6 +39,13 @@ namespace VehicleShowroomManagementSystem
 
             services.AddDbContext<VehicleShowroomManagementSystemContext>(options => options.UseSqlServer(Configuration.GetConnectionString("VehicleShowroomManagementSystem")));
 
+
+            // 
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,7 +70,7 @@ namespace VehicleShowroomManagementSystem
 
             app.UseSession();
 
-            app.UseEndpoints(endpoints => 
+            app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                   name: "areas",
