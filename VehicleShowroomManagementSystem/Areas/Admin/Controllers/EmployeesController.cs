@@ -35,24 +35,24 @@ namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
             return View(await vehicleShowroomManagementSystemContext.ToListAsync());
 
         }
+        public Employee CheckAdmin()
+        {
+            string admin = HttpContext.Session.GetString("Account");
+
+            var employee = _context.Employees.FirstOrDefault(e => e.Account == admin && e.Position == "Admin");
+            ViewBag.employee = employee;
+
+            return employee;
+        }
 
         // GET: Admin/Employees/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details()
         {
-            if (id == null)
+            if (CheckAdmin() == null)
             {
                 return NotFound();
             }
-
-            var employee = await _context.Employees
-                .Include(e => e.Branch)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
-
-            return View(employee);
+            return View();
         }
 
         // GET: Admin/Employees/Create
@@ -164,6 +164,7 @@ namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
+
             }
             ViewData["BranchId"] = new SelectList(_context.Branches, "Id", "Address", employee.BranchId);
             return View(employee);
