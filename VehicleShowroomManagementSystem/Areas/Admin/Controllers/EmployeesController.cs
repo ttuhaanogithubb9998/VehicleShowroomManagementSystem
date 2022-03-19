@@ -14,17 +14,16 @@ using VehicleShowroomManagementSystem.Models;
 namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class EmployeesController : Controller
+    public class EmployeesController : CheckAdminController
     {
         
-        private readonly VehicleShowroomManagementSystemContext _context;
+        
 
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public EmployeesController(VehicleShowroomManagementSystemContext context, IWebHostEnvironment webHostEnvironment)
+        public EmployeesController(VehicleShowroomManagementSystemContext context, IWebHostEnvironment webHostEnvironment):base(context)
         {
             _webHostEnvironment = webHostEnvironment;
-            _context = context;
         }
 
         // GET: Admin/Employees
@@ -35,24 +34,15 @@ namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
             return View(await vehicleShowroomManagementSystemContext.ToListAsync());
 
         }
-        public Employee CheckAdmin()
-        {
-            string admin = HttpContext.Session.GetString("Account");
-
-            var employee = _context.Employees.FirstOrDefault(e => e.Account == admin && e.Position == "Admin");
-            ViewBag.employee = employee;
-
-            return employee;
-        }
 
         // GET: Admin/Employees/Details/5
-        public async Task<IActionResult> Details()
+        public IActionResult Details()
         {
             if (CheckAdmin() == null)
             {
                 return NotFound();
             }
-            return View();
+            return View(CheckAdmin());
         }
 
         // GET: Admin/Employees/Create

@@ -10,13 +10,11 @@ using VehicleShowroomManagementSystem.Models;
 namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class HomeController : Controller
+    public class HomeController : CheckAdminController
     {
-        private readonly VehicleShowroomManagementSystemContext _context;
 
-        public HomeController(VehicleShowroomManagementSystemContext context)
+        public HomeController(VehicleShowroomManagementSystemContext context):base(context)
         {
-            _context = context;
         }
         public IActionResult Index()
         {
@@ -58,13 +56,6 @@ namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
                 return View();
             }
         }
-        public Employee CheckAdmin()
-        {
-            string admin = HttpContext.Session.GetString("Account");
-
-            var employee = _context.Employees.FirstOrDefault(e => e.Account == admin && e.Position == "Admin");
-            ViewBag.employee = employee;
-            return employee;
-        }
+       
     }
 }
