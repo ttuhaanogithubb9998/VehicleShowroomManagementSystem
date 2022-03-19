@@ -22,7 +22,7 @@ namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
             {
                 return RedirectToAction("Login");
             }
-            return View();
+            return RedirectToAction ("Index", "Products");
             
         }
         public IActionResult Login()
@@ -56,6 +56,13 @@ namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
                 return View();
             }
         }
-       
+        public IActionResult Logout()
+        {
+
+            HttpContext.Session.Remove("Account");
+
+            return RedirectToAction("Index", "Home");
+        }
+
     }
 }

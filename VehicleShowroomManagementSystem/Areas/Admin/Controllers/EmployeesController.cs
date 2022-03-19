@@ -29,6 +29,12 @@ namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
         // GET: Admin/Employees
         public async Task<IActionResult> Index()
         {
+           Employee employee =  CheckAdmin();
+            if(employee == null)
+            {
+                return RedirectToAction("Login", "Home");
+            }
+            
             var vehicleShowroomManagementSystemContext = _context.Employees.Include(e => e.Branch);
 
             return View(await vehicleShowroomManagementSystemContext.ToListAsync());
@@ -107,18 +113,15 @@ namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
         }
 
         // GET: Admin/Employees/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit()
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var employee = await _context.Employees.FindAsync(id);
+            Employee employee = CheckAdmin();
             if (employee == null)
             {
-                return NotFound();
+                return RedirectToAction("Login", "Home");
             }
+
+           
             ViewData["BranchId"] = new SelectList(_context.Branches, "Id", "Address", employee.BranchId);
             return View(employee);
         }
@@ -128,7 +131,7 @@ namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Position,BranchId,Account,Password,FullName,Avatar,Email,Address,PhoneNumber,Status")] Employee employee)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Position,BranchId,Account,Password,FullName,Avatar,AvatarFile,Email,Address,PhoneNumber,Status")] Employee employee)
         {
             if (id != employee.Id)
             {
@@ -139,8 +142,32 @@ namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
             {
                 try
                 {
+  
+                    if (employee.AvatarFile != null)
+                    {
+                        var fileName = id.ToString() + Path.GetExtension(employee.AvatarFile.FileName);
+                        var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "image", "avatar", "employee");
+                        var filePath = Path.Combine(uploadPath, fileName);
+                        using (FileStream fs = System.IO.File.Create(filePath))
+                        {
+                            employee.AvatarFile.CopyTo(fs);
+                            fs.Flush();
+                            employee.Avatar = fileName;
+                            employee.Id = id;
+                        };
+                        _context.Update(employee);
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {  
+                        ViewBag.msgFile = "Image cannot be blank!";
+                        ViewData["BranchId"] = new SelectList(_context.Branches, "Id", "Address");
+                        return View(employee);
+                    }
+
                     _context.Update(employee);
                     await _context.SaveChangesAsync();
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
