@@ -21,8 +21,8 @@ namespace VehicleShowroomManagementSystem.Controllers
 
         public Customer Ch_Cookie()
         {
-            string account  = HttpContext.Request.Cookies["Customer"];
-            var customer = _context.Customers.Include(c=>c.Carts).ThenInclude(c=>c.Product).ThenInclude(p=>p.ProductImages).Include(p=>p.Carts).ThenInclude(c=>c.Product).ThenInclude(p=>p.Warehouses).FirstOrDefault(c => c.Account == account);
+            string hashCode  = HttpContext.Request.Cookies["Customer"].GetHashCode().ToString();
+            var customer = _context.Customers.Include(c=>c.Carts).ThenInclude(c=>c.Product).ThenInclude(p=>p.ProductImages).Include(p=>p.Carts).ThenInclude(c=>c.Product).ThenInclude(p=>p.Warehouses).FirstOrDefault(c => c.Account.GetHashCode().ToString() == hashCode);
 
             ViewBag.customer = customer;
 

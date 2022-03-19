@@ -47,7 +47,7 @@ namespace VehicleShowroomManagementSystem.Controllers
                 if (customer != null)
                 {
                     int quantityProduct = _context.Carts.Where(c => c.CustomerId == customer.Id).Count();
-                    HttpContext.Response.Cookies.Append("Customer", customer.Account, new CookieOptions
+                    HttpContext.Response.Cookies.Append("Customer", customer.Account.GetHashCode().ToString(), new CookieOptions
                     {
                         Expires = DateTime.Now.AddDays(7)
                     });
@@ -98,7 +98,7 @@ namespace VehicleShowroomManagementSystem.Controllers
                     }
 
 
-                    HttpContext.Response.Cookies.Append("Customer", customer.Account, new CookieOptions
+                    HttpContext.Response.Cookies.Append("Customer", customer.Account.GetHashCode().ToString(), new CookieOptions
                     {
                         Expires = DateTime.Now.AddDays(7),
                     });
