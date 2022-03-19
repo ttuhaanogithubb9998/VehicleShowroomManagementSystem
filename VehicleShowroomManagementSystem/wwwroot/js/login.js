@@ -1,5 +1,10 @@
 
 $(document).ready(() => {
+
+    $('.team-active .slick-track').css("display","block")
+
+
+
     $('#loginModal button').click((e) => {
         e.preventDefault();
 
