@@ -11,19 +11,23 @@ using VehicleShowroomManagementSystem.Models;
 namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class InvoiceDetailsController : Controller
+    public class InvoiceDetailsController : CheckAdminController
     {
-        private readonly VehicleShowroomManagementSystemContext _context;
 
-        public InvoiceDetailsController(VehicleShowroomManagementSystemContext context)
+
+        public InvoiceDetailsController(VehicleShowroomManagementSystemContext context) : base(context)
         {
-            _context = context;
         }
 
         // GET: Admin/InvoiceDetails
         public async Task<IActionResult> Index()
         {
-            var vehicleShowroomManagementSystemContext = _context.InvoiceDetails.Include(i => i.Invoice).Include(i => i.Product);
+                Employee employee = CheckAdmin();
+                if (employee == null)
+                {
+                    return RedirectToAction("Login", "Home");
+                }
+                var vehicleShowroomManagementSystemContext = _context.InvoiceDetails.Include(i => i.Invoice).Include(i => i.Product);
             return View(await vehicleShowroomManagementSystemContext.ToListAsync());
         }
 

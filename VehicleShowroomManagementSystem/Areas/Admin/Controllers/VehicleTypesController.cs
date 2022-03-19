@@ -11,18 +11,23 @@ using VehicleShowroomManagementSystem.Models;
 namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class VehicleTypesController : Controller
+    public class VehicleTypesController : CheckAdminController
     {
-        private readonly VehicleShowroomManagementSystemContext _context;
 
-        public VehicleTypesController(VehicleShowroomManagementSystemContext context)
+
+        public VehicleTypesController(VehicleShowroomManagementSystemContext context):base(context)
         {
-            _context = context;
+            
         }
 
         // GET: Admin/VehicleTypes
         public async Task<IActionResult> Index()
         {
+            Employee employee = CheckAdmin();
+            if (employee == null)
+            {
+                return RedirectToAction("Login", "Home");
+            }
             return View(await _context.VehicleTypes.ToListAsync());
         }
 

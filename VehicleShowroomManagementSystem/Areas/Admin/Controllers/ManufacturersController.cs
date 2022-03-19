@@ -13,22 +13,27 @@ using VehicleShowroomManagementSystem.Models;
 namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class ManufacturersController : Controller
+    public class ManufacturersController : CheckAdminController
     {
-        private readonly VehicleShowroomManagementSystemContext _context;
+        
 
         private readonly IWebHostEnvironment _webHostEnvironment;
         
 
-        public ManufacturersController(VehicleShowroomManagementSystemContext context, IWebHostEnvironment webHostEnvironment)
+        public ManufacturersController(VehicleShowroomManagementSystemContext context, IWebHostEnvironment webHostEnvironment):base(context)
         {
             _webHostEnvironment = webHostEnvironment;
-            _context = context;
+           
         }
 
         // GET: Admin/Manufacturers
         public async Task<IActionResult> Index()
         {
+            Employee employee = CheckAdmin();
+            if (employee == null)
+            {
+                return RedirectToAction("Login", "Home");
+            }
             return View(await _context.Manufacturers.ToListAsync());
         }
 

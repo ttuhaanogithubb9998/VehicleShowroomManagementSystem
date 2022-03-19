@@ -11,18 +11,22 @@ using VehicleShowroomManagementSystem.Models;
 namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class ProductImagesController : Controller
+    public class ProductImagesController : CheckAdminController
     {
-        private readonly VehicleShowroomManagementSystemContext _context;
+  
 
-        public ProductImagesController(VehicleShowroomManagementSystemContext context)
+        public ProductImagesController(VehicleShowroomManagementSystemContext context):base(context)
         {
-            _context = context;
         }
 
         // GET: Admin/ProductImages
         public async Task<IActionResult> Index()
         {
+            Employee employee = CheckAdmin();
+            if (employee == null)
+            {
+                return RedirectToAction("Login", "Home");
+            }
             var vehicleShowroomManagementSystemContext = _context.ProductImages.Include(p => p.Product);
             return View(await vehicleShowroomManagementSystemContext.ToListAsync());
         }
