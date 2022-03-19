@@ -6,12 +6,12 @@
 
 <h1>Customer List</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Account)
             </th>
@@ -20,6 +20,7 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.FullName)
+
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Address)
@@ -43,6 +44,9 @@
 @foreach (var item in Model) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Account)
             </td>
             <td>
@@ -61,14 +65,15 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td class="w-25">
+                <img class="w-25" src="~/image/avatar/customer/@Html.DisplayFor(modelItem => item.Avatar)" />
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> 
+                
             </td>
         </tr>
 }

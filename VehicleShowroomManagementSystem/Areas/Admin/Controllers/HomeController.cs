@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VehicleShowroomManagementSystem.Data;
+using VehicleShowroomManagementSystem.Models;
 
 namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
 {
@@ -19,20 +20,16 @@ namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
         }
         public IActionResult Index()
         {
-            if(!CheckAdmin())
+            if(CheckAdmin()==null)
             {
                 return RedirectToAction("Login");
-            }
-            if (HttpContext.Session.GetString("Account") != null)
-            {
-                ViewBag.FullName = HttpContext.Session.GetString("Account");
             }
             return View();
             
         }
         public IActionResult Login()
         {
-            if(!CheckAdmin())
+            if(CheckAdmin()==null)
             {
                 return View();
             }
@@ -61,13 +58,13 @@ namespace VehicleShowroomManagementSystem.Areas.Admin.Controllers
                 return View();
             }
         }
-        public bool CheckAdmin()
+        public Employee CheckAdmin()
         {
             string admin = HttpContext.Session.GetString("Account");
 
-            bool check = _context.Employees.Any(e => e.Account == admin && e.Position == "Admin");
-
-            return check;
+            var employee = _context.Employees.FirstOrDefault(e => e.Account == admin && e.Position == "Admin");
+            ViewBag.employee = employee;
+            return employee;
         }
     }
 }
